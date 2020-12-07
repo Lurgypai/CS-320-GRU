@@ -1,21 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="mainMenuScripts.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />
     <meta charset="UTF-8">
     <title>Vibe Checkers</title>
 </head>
-<body style="text-align:center; margin-top:50px">
+<body style="text-align:center; margin-top:100px">
     <h1>Checkers!</h1>
-    <div style="margin-top:200px">
-        <div class="ui button">
-            Play Game
+    <br>
+    <div id="player_welcome_div"></div>
+    <div id="enter_name_div" style="text-align: center;">
+
+        <div class="ui input">
+            <input id="name_input" type="text" placeholder="Enter a name">
         </div>
+        <br>
+        <br>
+        <div class="ui button" onclick="validName()">
+            Accept Name
+        </div>
+
+    </div>
+
+    <div id="main_menu_div" style="margin-top:150px; visibility: hidden;">
+        <div class="ui button" onclick="playGameOptions()">
+            1 Player
+        </div>
+        <div class="ui button">
+            2 Player
+        </div>
+        <br>
+        <br>
         <div class="ui button">
             Leaderboard
         </div>
     </div>
 
-</body>
+    <div id="play_game_options" style="visibility: hidden;">
+        <div class="ui button">
+            Difficulty
+        </div>
 
+        <div class="ui button">
+            Back
+        </div>
+    </div>
+</body>
 </html>
