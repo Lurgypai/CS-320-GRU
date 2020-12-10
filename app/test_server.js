@@ -1,3 +1,9 @@
+const readline = require("readline");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 class Server {
   start() {
     const WebSocket = require('ws')
@@ -45,6 +51,22 @@ class Game {
   }
 
   runGame() {
+    this.consolePlayerMove();
+  }
+
+
+  //calback that calls itself
+  consolePlayerMove(move) {
+    const game = this;
+
+    rl.question("Player " + game.curPlayer + ", enter a piece position: ", function (pos) {
+      console.log(pos);
+      rl.question("Player " + game.curPlayer + ", enter a move position: ", function (pos) {
+        console.log(pos);
+        game.switchPlayer();
+        game.consolePlayerMove();
+      });
+    });
   }
 }
 
