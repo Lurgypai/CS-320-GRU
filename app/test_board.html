@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SuperCheck</title>
+</head>
 <body>
 
 <canvas id="board" width="640" height="640"/>
 
-<script>
+<script src = "boardScript.js">
+  /* code moved into boardScript (remove commented code if this is okay)
 //code adapted from https://stackoverflow.com/questions/9880279/how-do-i-add-a-simple-onclick-event-handler-to-a-canvas-element
 var elem = document.getElementById('board'),
     elemLeft = elem.offsetLeft + elem.clientLeft,
@@ -20,7 +25,7 @@ elem.addEventListener('click', function(event) {
 
     // Collision detection between clicked offset and element.
     elements.forEach(function(element) {
-        if (y > element.top && y < element.top + element.height 
+        if (y > element.top && y < element.top + element.height
             && x > element.left && x < element.left + element.width) {
             console.log("clicked element: " + element.id);
         }
@@ -55,6 +60,7 @@ elements.forEach(function(element) {
     context.fillStyle = element.colour;
     context.fillRect(element.left, element.top, element.width, element.height);
 });
+  */
 </script>
 
 
@@ -69,13 +75,13 @@ function test() {
     connection.onopen = () => {
         connection.send('hey')
     }
-    
+
     connection.onerror = error => {
         console.log(`WebSocket error: ${error}`)
     }
 }
 </script>
 -->
- 
+
 </body>
 </html>

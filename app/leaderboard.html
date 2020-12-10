@@ -1,44 +1,60 @@
 <!DOCTYPE html>
 <html>
 <body>
-<style>
+  <style>
   h1 {text-align: center;}
   h1 {color: darkred;}
   h1 {border-style: double;}
 
   p1 {font-size: large}
   p1 {border-bottom-style: solid}
-</style>
 
-<h1>LeaderBoard</h1>
-<p1>Players</p1>
+  #container {
+    background-color: darkgrey;
+    color: black;
+    font-size: large;
+  }
+  .wins {
+    background-color: grey;
+    color: black;
+  }
+  .text-center {
+    text-align: center;
+  }
+  </style>
 
-<br>
-<br>
+  <h1>LeaderBoard</h1>
 
-<div id="container">
-  <div class="row">
-    <div class="name">Player1</div><div class="score">430</div>
+  <div class="text-center">
+    <button type="return" onclick="location.href = 'index.html'">Return</button>
   </div>
 
-  <div class="row">
-    <div class="name">Player2</div><div class="score">580</div>
+  <p1>Players & Wins</p1>
+
+  <br>
+  <br>
+
+  <div id="container">
+    <div class="row">
+      <div class="name">Player1</div><div class="wins">Wins:640</div>
+    </div>
+
+    <div class="row">
+      <div class="name">Player2</div><div class="wins">Wins:580</div>
+    </div>
+
+    <div class="row">
+      <div class="name">Player3</div><div class="wins">Wins:430</div>
+    </div>
+
+    <div class="row">
+      <div class="name">Player4</div><div class="wins">Wins:400</div>
+    </div>
+
+    <div class="row">
+      <div class="name">Player5</div><div class="wins">Wins:315</div>
+    </div>
   </div>
-
-  <div class="row">
-    <div class="name">Player3</div><div class="score">310</div>
-  </div>
-
-  <div class="row">
-    <div class="name">Player4</div><div class="score">640</div>
-  </div>
-
-  <div class="row">
-    <div class="name">Player5</div><div class="score">495</div>
-  </div>
-</div>
-
-
 
 </body>
 </html>
