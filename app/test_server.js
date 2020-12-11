@@ -32,6 +32,18 @@ class Game {
     this.runGame();
   }
 
+  resetGame() {
+    //reset game state (in board class) or not needed?
+    this.board.clearBoard();
+    this.startGame(); //Do we have to worry about calling runGame while a game is already in progress?
+    //or should we just perform "this.board.fillBoard();"?
+  }
+
+  cancelGame() {
+    //Stop interactions with the board and boot players to landing page?
+    //Or stop players from using anything other than the menu?
+  }
+
   getCurrentPlayerTargetPiece() {
   }
 
@@ -89,7 +101,7 @@ class Player {
 
 //class containing board data
 class Board {
-  //generatae 2d array of pieces
+  //generate a 2d array of pieces
   constructor() {
     this.width = 8;
     this.height = 8;
@@ -158,6 +170,21 @@ class Board {
           this.data[i][j] = 2;
       }
     }
+  }
+
+  validMove() {
+    /*
+    Needs data regarding the piece chosen & the position chosen to move will then check
+    (1)If move is in the bounds of the board (2)Piece isn't too far (3)Piece moves in the correct direction
+    (3)Single jumps are not more than 1piece (4)MultiJumps rules are followed
+    Need to know pieces are a king or pawn to discern valid moves for respective pieces
+    */
+  }
+  checkWin() {
+    /* This will use the array of active pieces (IF we have separate arrays for each player's pieces)
+    to determine a winner, we also need to see if pieces are unable to move which results in a draw or loss
+    we will need to cooperate with validity of moves here
+    */
   }
 }
 
