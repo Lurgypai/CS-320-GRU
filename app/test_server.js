@@ -29,6 +29,7 @@ class Game {
 
   startGame() {
     this.board.fillBoard();
+    this.board.printBoard();
     this.runGame();
   }
 
@@ -99,6 +100,15 @@ class Player {
   }
 }
 
+class Piece {
+  constructor(id_, team_) {
+    this.id = id_;
+    this.king = false;
+    this.team = team_;
+    this.alive = false;
+  }
+}
+
 //class containing board data
 class Board {
   //generate a 2d array of pieces
@@ -106,6 +116,8 @@ class Board {
     this.width = 8;
     this.height = 8;
     this.data = [];
+    this.pieces = new Map();
+    this.pieceCount = 24
 
     for(var i = 0; i !== this.width; ++i) {
       var row = [];
@@ -113,6 +125,14 @@ class Board {
         row.push(0);
       }
       this.data.push(row);
+    }
+
+    var currPieceId = 0;
+    for(var i = 0; i !== this.pieceCount / 2; ++i) {
+      this.pieces.set(++currPieceId, new Piece(currPieceId, 1));
+    }
+    for(var i = 0; i !== this.pieceCount / 2; ++i) {
+      this.pieces.set(++currPieceId, new Piece(currPieceId, 2));
     }
   }
 
@@ -124,11 +144,15 @@ class Board {
     for(var row of this.data) {
       var rowString = "|";
       for(var colVal of row) {
+        if(colVal ===  0) {
+          rowString += ' |';
+          continueA;
+        } else {
+
+        }
+        var piece = this.pieces.get(colVal);
         var drawChar = ' ';
-        switch (colVal) {
-          case 0:
-            drawChar = ' ';
-            break;
+        switch (piece.team) {
           case 1:
             drawChar = '@';
             break;
@@ -155,19 +179,30 @@ class Board {
   //clear and fill with pieces
   fillBoard() {
     this.clearBoard();
+    var currId = 0;
+
+    for(var pair of this.pieces) {
+      pair[1].alive = true;
+      pair[1].king = false;
+    }
+
     for(var i = 0; i != this.height; ++i) {
       for(var j =0; j != this.width; ++j) {
 
         //start with white, every other row fill every other piece
-        if(i % 2 == 0 && j % 2 == 1 && i < 3)
-          this.data[i][j] = 1;
-        else if(i % 2 == 1 && j % 2 == 0 && i < 3)
-          this.data[i][j] = 1;
+        if(i % 2 == 0 && j % 2 == 1 && i < 3) {
+          this.data[i][j] = ++currId;
+        }
+        else if(i % 2 == 1 && j % 2 == 0 && i < 3) {
+          this.data[i][j] = ++currId;
+        }
         //black, the same, but lower
-        if(i % 2 == 0 && j % 2 == 1 && i >= 5)
-          this.data[i][j] = 2;
-        else if(i % 2 == 1 && j % 2 == 0 && i >= 5)
-          this.data[i][j] = 2;
+        if(i % 2 == 0 && j % 2 == 1 && i >= 5) {
+          this.data[i][j] = ++currId;
+        }
+        else if(i % 2 == 1 && j % 2 == 0 && i >= 5) {
+          this.data[i][j] = ++currId;
+        }
       }
     }
   }
