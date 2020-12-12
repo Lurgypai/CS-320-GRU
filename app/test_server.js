@@ -146,7 +146,7 @@ class Board {
       for(var colVal of row) {
         if(colVal ===  0) {
           rowString += ' |';
-          continueA;
+          continue;
         } else {
 
         }
