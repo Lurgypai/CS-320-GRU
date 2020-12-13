@@ -15,7 +15,20 @@ function drawBoard() {
     elements.forEach(function(element) {
       if (y > element.top && y < element.top + element.height
           && x > element.left && x < element.left + element.width) {
-        console.log("clicked element: " + element.id);
+        const url = 'ws://localhost:8080'
+        const connection = new WebSocket(url)
+        connection.onopen = () => {
+          connection.send(element.id);
+          connection.onmessage = e => {
+            if (e.data){
+              drawPiece(context, element);
+            }
+          }
+        }
+        connection.onerror = error => {
+          console.log(`WebSocket error: ${error}`)
+        }
+
       }
     });
 
@@ -64,10 +77,11 @@ function drawBoard() {
   });
 }
 
-function drawPiece(context) {
+// this can be reutilized to be passed arguments from Board to print the desired piece.
+function drawPiece(context, element) {
   let img = new Image();
   img.onload = function() {
-    context.drawImage(img, 0, 0);
+    context.drawImage(img, element.left, element.top);
   }
   img.src = 'black_piece.png';
 }

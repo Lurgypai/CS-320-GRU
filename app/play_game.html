@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <script src = "draw_board.js"></script>
-<!--  <script src = "test_server.js"></script>-->
+  <script src = "board.js"></script>
   <title>SuperCheck</title>
 
 </head>
@@ -16,8 +16,21 @@
 </body>
 <script>
     window.onload = function(e) {
-      // let gameBoard = new Board();
-      drawBoard();
+      let board = new Board();
+      drawBoard(board);
     };
+</script>
+<script>
+  //code adapted from https://github.com/websockets/ws#simple-server and https://flaviocopes.com/node-websockets/
+  function test() {
+    const url = 'ws://localhost:8080'
+    const connection = new WebSocket(url)
+    connection.onopen = () => {
+      connection.send('hey')
+    }
+    connection.onerror = error => {
+      console.log(`WebSocket error: ${error}`)
+    }
+  }
 </script>
 </html>
