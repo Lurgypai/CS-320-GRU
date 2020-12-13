@@ -91,7 +91,7 @@ class Pos {
   }
 }
 
-//stores and id, and what piece they currently want to move
+//stores an id, and what piece they currently want to move
 class Player {
   constructor(id_) {
     this.id = id_;
