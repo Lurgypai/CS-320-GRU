@@ -126,12 +126,28 @@ class Board
     }
   }
 
-  validMove()
+  makeValidMoves(pieceId) {
+    let validMoves = [];
+    if(this.pieces.has(pieceId)) {
+      //get team
+      //
+    } else {
+      return validMoves;
+    }
+  }
+
+  validMove(pieceId, newX, newY)
   {
+    if(this.pieces.has(pieceId)) {
+
+    }
     /*
     Needs data regarding the piece chosen & the position chosen to move will then check
-    (1)If move is in the bounds of the board (2)Piece isn't too far (3)Piece moves in the correct direction
-    (3)Single jumps are not more than 1piece (4)MultiJumps rules are followed
+    (1)If move is in the bounds of the board
+    (2)Piece isn't too far
+    (3)Piece moves in the correct direction
+    (3)Single jumps are not more than 1piece
+    (4)MultiJumps rules are followed
     Need to know pieces are a king or pawn to discern valid moves for respective pieces
     */
   }
