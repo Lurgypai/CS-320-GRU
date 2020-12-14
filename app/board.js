@@ -21,6 +21,8 @@ class Piece {
     this.king = false;
     this.team = team_;
     this.alive = false;
+    this.col = 0;
+    this.row = 0;
   }
 }
 
@@ -111,29 +113,101 @@ class Board
         //start with white, every other row fill every other piece
         if (i % 2 == 0 && j % 2 == 1 && i < 3) {
           this.data[i][j] = ++currId;
+          this.pieces.get(currId).col = j;
+          this.pieces.get(currId).row = i;
         } else
           if (i % 2 == 1 && j % 2 == 0 && i < 3) {
             this.data[i][j] = ++currId;
+            this.pieces.get(currId).col = j;
+            this.pieces.get(currId).row = i;
           }
         //black, the same, but lower
         if (i % 2 == 0 && j % 2 == 1 && i >= 5) {
           this.data[i][j] = ++currId;
+          this.pieces.get(currId).col = j;
+          this.pieces.get(currId).row = i;
         } else
           if (i % 2 == 1 && j % 2 == 0 && i >= 5) {
             this.data[i][j] = ++currId;
+            this.pieces.get(currId).col = j;
+            this.pieces.get(currId).row = i;
           }
       }
     }
   }
 
-  makeValidMoves(pieceId) {
+  getValidMoves(pieceId) {
     let validMoves = [];
     if(this.pieces.has(pieceId)) {
+      const piece = this.pieces.get(pieceId);
       //get team
-      //
-    } else {
-      return validMoves;
+      //get valid moves based off of team
+      var direction = 0;
+      if(!piece.king) {
+        if(piece.team == 1) {
+          direction = 1;
+        } else {
+          direction = -1;
+        }
+      }
+      let currPos = [piece.col, piece.row];
+      if(currPos[0] > 0) {
+        let targetPos = [currPos[0] - 1, currPos[1] + direction];
+        if(!this.data[targetPos[1]][targetPos[0]]) {
+          validMoves.push(targetPos);
+        }
+      }
+      if(currPos[0] < this.width-1) {
+        let targetPos = [currPos[0] + 1, currPos[1] + direction];
+        if(!this.data[targetPos[1]][targetPos[0]]) {
+          validMoves.push(targetPos);
+        }
+      }
+
+      const jumpMoves = this.getJumpMoves(direction, currPos, piece.team);
+      validMoves = validMoves.concat(jumpMoves);
     }
+    return validMoves;
+  }
+
+  getJumpMoves(direction, currPos, teamId) {
+    let targetPos = [0, 0];
+    let ret = [];
+    if(currPos[0] > 1) {
+      targetPos = [currPos[0] - 1, currPos[1] + direction];
+      if(targetPos[1] > 0 && targetPos[1] < this.height - 1) {
+        let targetId = this.data[targetPos[1]][targetPos[0]];
+        if (targetId) {
+          const targetPiece = this.pieces.get(targetId);
+          if (targetPiece.team !== teamId) {
+            let targetMove = [currPos[0] - 2, currPos[1] + (direction * 2)];
+            //if there isn't a piece there
+            if(!this.data[targetMove[1]][targetMove[0]]) {
+              ret.push(targetMove);
+              ret = ret.concat(this.getJumpMoves(direction, targetMove, teamId));
+            }
+          }
+        }
+      }
+    }
+    if(currPos[0] < this.width - 2) {
+      targetPos = [currPos[0] + 1, currPos[1] + direction];
+      if(targetPos[1] > 0 && targetPos[1] < this.height - 1) {
+        let targetId = this.data[targetPos[1]][targetPos[0]];
+        if (targetId) {
+          const targetPiece = this.pieces.get(targetId);
+          if (targetPiece.team !== teamId) {
+            let targetMove = [currPos[0] + 2, currPos[1] + (direction * 2)];
+            //if there isn't a piece  there
+            if(!this.data[targetMove[1]][targetMove[0]]) {
+              ret.push(targetMove);
+              ret = ret.concat(this.getJumpMoves(direction, targetMove, teamId));
+            }
+          }
+        }
+      }
+    }
+    return ret;
   }
 
   validMove(pieceId, newX, newY)
@@ -157,6 +231,13 @@ class Board
     to determine a winner, we also need to see if pieces are unable to move which results in a draw or loss
     we will need to cooperate with validity of moves here
     */
+  }
+
+  movePiece(pieceId, newX, newY) {
+    const piece = this.pieces.get(pieceId);
+
+    this.data[piece.row][piece.col] = 0;
+    this.data[newY][newX] = pieceId;
   }
 }
 module.exports = {Board};

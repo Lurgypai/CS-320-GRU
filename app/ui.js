@@ -3,8 +3,8 @@ class UI {
   constructor() {
     this.boardCanvas = document.getElementById('board');
     this.canvasLeft = this.boardCanvas.offsetLeft + this.boardCanvas.clientLeft;
-    this.canvasTop = this.boardCanvas.offsetTop + this.boardCanvas.clientTop,
-    this.canvasContext = this.boardCanvas.getContext('2d'),
+    this.canvasTop = this.boardCanvas.offsetTop + this.boardCanvas.clientTop;
+    this.canvasContext = this.boardCanvas.getContext('2d');
     this.elements = [];
     this.board = new Board();
     this.board.fillBoard();
@@ -16,12 +16,16 @@ class UI {
       console.log(e);
     }
 
+    this.board.movePiece(1, 1, 4);
+    this.board.movePiece(6, 3, 4);
+    this.board.printBoard();
   }
 
   handleClick(element) {
     const row = element.row;
     const col = element.col;
-
+    const pieceId = this.board.data[row][col];
+    console.log(this.board.getValidMoves(pieceId));
   }
 
   prepareBoard() {
@@ -30,13 +34,16 @@ class UI {
     const canvasContext = this.canvasContext;
     const board = this.board;
     const UI = this;
+    const elements = this.elements;
+    const canvasLeft = this.canvasLeft;
+    const canvasTop = this.canvasTop;
 
     this.boardCanvas.addEventListener('click', function (event) {
-      let x = event.pageX - this.canvasLeft,
-          y = event.pageY - this.canvasTop;
+      let x = event.pageX - canvasLeft,
+          y = event.pageY - canvasTop;
 
       // Collision detection between clicked offset and element.
-      this.elements.forEach(function (element) {
+      elements.forEach(function (element) {
         if (y > element.top && y < element.top + element.height
             && x > element.left && x < element.left + element.width) {
             UI.handleClick(element);
