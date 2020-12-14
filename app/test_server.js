@@ -16,7 +16,7 @@ class Server {
       ws.on('message', message => {
         console.log(`Received message => ${message}`)
       })
-      ws.send(true)
+      ws.send("true")
     })
   }
 }

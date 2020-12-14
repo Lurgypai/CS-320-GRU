@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <script src = "draw_board.js"></script>
   <script src = "board.js"></script>
+  <script src = "ui.js"></script>
   <title>SuperCheck</title>
 
 </head>
@@ -15,12 +15,11 @@
 
 </body>
 <script>
-    window.onload = function(e) {
-      let board = new Board();
-      drawBoard(board);
-    };
-</script>
-<script>
+  let ui = new UI();
+  window.onload = function(e) {
+    ui.prepareBoard();
+  };
+
   //code adapted from https://github.com/websockets/ws#simple-server and https://flaviocopes.com/node-websockets/
   function test() {
     const url = 'ws://localhost:8080'
