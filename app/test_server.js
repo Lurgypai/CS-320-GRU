@@ -46,20 +46,6 @@ class Game {
     //Or stop players from using anything other than the menu?
   }
 
-  getCurrentPlayerTargetPiece() {
-  }
-
-  getCurrentPlayerTargetMove() {
-  }
-
-  doMove() {
-    const targetPiece = this.players[this.curPlayer].targetPiece;
-    const targetMove = this.players[this.curPlayer].targetMove;
-
-    this.board.data[targetMove.y][targetMove.x] = this.curPlayer;
-    this.board.data[targetPiece.y][targetPiece.x] = 0;
-  }
-
   switchPlayer() {
     this.curPlayer = (this.curPlayer % 2) + 1;
   }
@@ -69,7 +55,7 @@ class Game {
   }
 
 
-  //calback that calls itself
+  //callback that calls itself
   consolePlayerMove(move) {
     const game = this;
 
