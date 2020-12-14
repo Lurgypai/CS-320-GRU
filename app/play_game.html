@@ -6,8 +6,74 @@
   <script src = "ui.js"></script>
   <title>SuperCheck</title>
 
+  <style>
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: darkgray;
+    }
+
+    li {
+      float: left;
+    }
+
+    li a, .dropbtn {
+      display: inline-block;
+      color: black;
+      text-align: center;
+      font-size: 40px;
+      padding: 10px 12px;
+      text-decoration: none;
+    }
+
+    li a:hover, .dropdown:hover .dropbtn {
+      background-color: lightgray;
+    }
+
+    li.dropdown {
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: snow;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      font-size: 30px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+
+    .dropdown-content a:hover {background-color: whitesmoke;}
+
+    .dropdown:hover .dropdown-content {display: block;}
+  </style>
+
+
 </head>
 <body>
+
+<ul>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn">Settings</a>
+    <div class="dropdown-content">
+      <a onclick="resetGame(); return false;" href="play_game.html">Reset</a>
+      <a href="#">Cancel</a>
+    </div>
+  </li>
+</ul>
+
 <br>
 <br>
     <canvas id="board" width="800" height="800" style="display: block; margin: 0 auto;"/>
