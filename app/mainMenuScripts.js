@@ -31,5 +31,20 @@ function returnToMenu() {
 }
 
 function startSingleplayer() {
-    
+  console.log("hello");
+}
+
+function twoPlayerOptions() {
+
+  let twoP_options_div = document.getElementById("two_player_options_div");
+
+  if (twoP_options_div.style.display === "none"){
+
+    twoP_options_div.style.display = "block";
+  }
+  else twoP_options_div.style.display = "none";
+}
+
+function sendMsgToServer() {
+  console.log("hello");
 }
