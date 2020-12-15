@@ -26,7 +26,7 @@
   <h1>LeaderBoard</h1>
 
   <div class="text-center">
-    <button type="return" onclick="location.href = 'index.html'">Return</button>
+    <button onclick="goBack()">Return</button>
   </div>
 
   <p1>Players & Wins</p1>
@@ -57,10 +57,16 @@
   </div>
 
   <br>
-  
+
   <div class="text-center">
-    <button type="return" onclick="location.href = 'index.html'">Return</button>
+    <button onclick="goBack()">Return</button>
   </div>
+
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
 
 </body>
 </html>
