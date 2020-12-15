@@ -1,6 +1,6 @@
 class GameClient {
   constructor(ui) {
-    this.targetUrl = 'ws://167.99.14.174:8080'
+    this.targetUrl = 'ws://localhost:8080'
     this.connection = new WebSocket(this.targetUrl);
     this.peerId = 0;
     this.roomId = "";
@@ -27,7 +27,21 @@ class GameClient {
       if(parsed.id === 3) {
         this.roomId = parsed.roomId;
       }
-      this.onReceive(message.data)
+      if(parsed.id === 4) {
+        Object.assign(this.ui.board, JSON.parse(parsed.board));
+        this.ui.board.pieces = new Map();
+        //console.log("Attempting to load: " + parsed.pieces);
+        const pieces = JSON.parse('[' + parsed.pieces + ']');
+        //console.log("Attempting to load: " + parsed.pieces);
+        for(const obj of pieces) {
+          const piece = new Piece();
+          Object.assign(piece, obj);
+          //console.log("loading piece: " + JSON.stringify(piece));
+          this.ui.board.pieces.set(piece.id, piece)
+        }
+        this.ui.prepareBoard();
+      }
+      this.onReceive(message.data);
     }
 
     this.connection.onerror = error => {
@@ -36,6 +50,7 @@ class GameClient {
   }
 
   sendMove(roomId, pieceId, x, y) {
+    console.log("moving piece: " + pieceId + " to " + x +", "+ y);
     let move = {peerId: this.peerId, roomId: this.roomId, id: 2, pieceId: pieceId, x: x, y: y};
     this.connection.send(JSON.stringify(move));
   }

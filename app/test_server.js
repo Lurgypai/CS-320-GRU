@@ -47,9 +47,18 @@ class Server {
             console.log("Joining: " + parsed.peerId + " to " + parsed.roomId);
           } else {
             server.rooms.set(parsed.roomId, new Room(parsed.roomId, parsed.peerId));
+            server.rooms.get(parsed.roomId).board.fillBoard();
             console.log("Creating room " + parsed.roomId + " with host " + parsed.peerId);
           }
           this.clients[parsed.peerId - 1].ws.send(message);
+          const currRoom = server.rooms.get(parsed.roomId);
+          let pieces = [];
+          currRoom.board.pieces.forEach(value => {
+            pieces.push(JSON.stringify(value));
+          });
+          let boardState = {id: 4, board: JSON.stringify(server.rooms.get(parsed.roomId).board), pieces:pieces};
+          this.clients[parsed.peerId - 1].ws.send(JSON.stringify(boardState));
+          console.log("Sending board state...");
         }
         if(parsed.id === 2) {
           const room = server.rooms.get(parsed.roomId);

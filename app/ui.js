@@ -31,6 +31,14 @@ make_move
   moveY:
   peerId
 }
+
+server->client
+send_board
+{
+  id: 4
+  board
+  pieces
+}
 */
 
 class UI {
@@ -42,7 +50,6 @@ class UI {
     this.elements = [];
     this.board = new Board();
     this.client = new GameClient(this);
-    this.board.fillBoard();
     this.selectedPieceId = 0;
     this.waiting = false;
 
@@ -92,7 +99,7 @@ class UI {
       elements.forEach(function (element) {
         if (y > element.top && y < element.top + element.height
             && x > element.left && x < element.left + element.width) {
-            UI.handleClick(element);
+          UI.handleClick(element);
         }
       });
 
