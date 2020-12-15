@@ -28,13 +28,28 @@
             </div>
             <br>
             <br>
-            <div class="ui button" onclick="location.href = 'play_game.html'">
+            <div class="ui button" onclick="twoPlayerOptions()">
                 2 Player
             </div>
             <br>
             <br>
+
+            <div id="two_player_options_div" style="display: none">
+              <div class="ui button" onclick="location.href = 'play_game.html'">
+                Create new game
+              </div>
+              <br>
+              <br>
+              <div class="ui input">
+                <input id="code_input" type="text" placeholder="Enter join code">
+              </div>
+              <div class="ui button" onclick="sendMsgToServer()">
+                Join game
+              </div>
+            </div>
+            <br>
             <div class="ui button" onclick="location.href = 'leaderboard.html'">
-                Leaderboard
+              Leaderboard
             </div>
         </div>
 
