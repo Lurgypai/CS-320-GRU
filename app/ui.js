@@ -1,4 +1,30 @@
 //code adapted from https://stackoverflow.com/questions/9880279/how-do-i-add-a-simple-onclick-event-handler-to-a-canvas-element
+/*
+client->server
+connect_request
+{
+  id: 0
+  name:
+}
+server->client
+connect_accept
+{
+  id: 1
+  roomId:
+}
+
+client->server
+server->client
+make_move
+{
+  id: 2
+  roomId:
+  pieceId:
+  moveX:
+  moveY:
+}
+*/
+
 class UI {
   constructor() {
     this.boardCanvas = document.getElementById('board');
@@ -7,15 +33,9 @@ class UI {
     this.canvasContext = this.boardCanvas.getContext('2d');
     this.elements = [];
     this.board = new Board();
+    this.client = new GameClient();
     this.board.fillBoard();
     this.selectedPieceId = 0;
-
-    this.targetUrl = 'ws://localhost:8080'
-    this.connection = new WebSocket(this.targetUrl);
-
-    this.connection.onmessage = e => {
-      console.log(e);
-    }
 
     this.board.printBoard();
   }
@@ -26,21 +46,25 @@ class UI {
     const clickedPieceId = this.board.data[row][col];
     if(this.selectedPieceId) {
       if(!clickedPieceId) {
-        const piece = this.board.pieces.get(this.selectedPieceId);
-        this.clearPosition(piece.col, piece.row);
-        this.board.movePiece(this.selectedPieceId, col, row);
-        this.selectedPieceId = 0;
-        //update gfx
-        this.drawPiece(col, row, piece.team);
+        const moves = this.board.getValidMoves(this.selectedPieceId);
+        let isValid = false;
+        for(const move of moves) {
+          if(move[0] === col && move[1] === row) {
+            isValid = true;
+            break;
+          }
+        }
+        if(isValid) {
+          this.client.sendMove("test", this.selectedPieceId, col, row);
+        }
       }
-    } else {
-      this.selectedPieceId = clickedPieceId;
     }
+    if(clickedPieceId)
+      this.selectedPieceId = clickedPieceId;
   }
 
   prepareBoard() {
     //set up the click listener
-    const connection = this.connection;
     const canvasContext = this.canvasContext;
     const board = this.board;
     const UI = this;
