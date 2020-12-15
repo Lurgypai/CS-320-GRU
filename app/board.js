@@ -136,36 +136,42 @@ class Board
     }
   }
 
+  //TODO: rename to getSingleMoves, fix getJumpMoves
   getValidMoves(pieceId) {
     let validMoves = [];
     if(this.pieces.has(pieceId)) {
       const piece = this.pieces.get(pieceId);
       //get team
       //get valid moves based off of team
-      var direction = 0;
+      let offsets = [];
       if(!piece.king) {
-        if(piece.team == 1) {
+        let direction = 0;
+        if(piece.team === 1) {
           direction = 1;
         } else {
           direction = -1;
         }
+        offsets.push([-1, direction]);
+        offsets.push([1, direction]);
+      } else {
+        offsets.push([-1, -1]);
+        offsets.push([1, -1]);
+        offsets.push([-1, 1]);
+        offsets.push([1, 1]);
       }
+
       let currPos = [piece.col, piece.row];
-      if(currPos[0] > 0) {
-        let targetPos = [currPos[0] - 1, currPos[1] + direction];
-        if(!this.data[targetPos[1]][targetPos[0]]) {
-          validMoves.push(targetPos);
-        }
-      }
-      if(currPos[0] < this.width-1) {
-        let targetPos = [currPos[0] + 1, currPos[1] + direction];
-        if(!this.data[targetPos[1]][targetPos[0]]) {
-          validMoves.push(targetPos);
+      for(const offset of offsets) {
+        let newPos = [offset[0] + currPos[0], offset[1] + currPos[1]];
+        if(newPos[0] >= 0 && newPos[0] < this.width && newPos[1] >= 0 && newPos[1] < this.height) {
+          if(!this.data[newPos[1]][newPos[0]]) {
+            validMoves.push(newPos);
+          }
         }
       }
 
-      const jumpMoves = this.getJumpMoves(direction, currPos, piece.team);
-      validMoves = validMoves.concat(jumpMoves);
+      //const jumpMoves = this.getJumpMoves(direction, currPos, piece.team);
+      //validMoves = validMoves.concat(jumpMoves);
     }
     return validMoves;
   }
