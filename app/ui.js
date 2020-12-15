@@ -10,6 +10,13 @@ server->client
 connect_accept
 {
   id: 1
+  peerId:
+}
+
+room
+{
+  peerId:
+  id: 3
   roomId:
 }
 
@@ -22,6 +29,7 @@ make_move
   pieceId:
   moveX:
   moveY:
+  peerId
 }
 */
 
@@ -33,9 +41,10 @@ class UI {
     this.canvasContext = this.boardCanvas.getContext('2d');
     this.elements = [];
     this.board = new Board();
-    this.client = new GameClient();
+    this.client = new GameClient(this);
     this.board.fillBoard();
     this.selectedPieceId = 0;
+    this.waiting = false;
 
     this.board.printBoard();
   }
@@ -44,23 +53,26 @@ class UI {
     const row = element.row;
     const col = element.col;
     const clickedPieceId = this.board.data[row][col];
-    if(this.selectedPieceId) {
-      if(!clickedPieceId) {
-        const moves = this.board.getValidMoves(this.selectedPieceId);
-        let isValid = false;
-        for(const move of moves) {
-          if(move[0] === col && move[1] === row) {
-            isValid = true;
-            break;
+    if(!this.waiting) {
+      if (this.selectedPieceId) {
+        if (!clickedPieceId) {
+          const moves = this.board.getValidMoves(this.selectedPieceId);
+          let isValid = false;
+          for (const move of moves) {
+            if (move[0] === col && move[1] === row) {
+              isValid = true;
+              break;
+            }
+          }
+          if (isValid) {
+            this.client.sendMove("test", this.selectedPieceId, col, row);
+            this.waiting = true;
           }
         }
-        if(isValid) {
-          this.client.sendMove("test", this.selectedPieceId, col, row);
-        }
       }
+      if (clickedPieceId)
+        this.selectedPieceId = clickedPieceId;
     }
-    if(clickedPieceId)
-      this.selectedPieceId = clickedPieceId;
   }
 
   prepareBoard() {
@@ -150,5 +162,14 @@ class UI {
     const element = this.elements[x + y * this.board.width];
     this.canvasContext.fillStyle = element.colour;
     this.canvasContext.fillRect(element.left, element.top, element.width, element.height);
+  }
+
+  makeMove(pieceId, col, row) {
+    console.log("Moving piece " + pieceId)
+    const piece = this.board.pieces.get(pieceId);
+    this.clearPosition(piece.col, piece.row);
+    this.board.movePiece(pieceId, col, row);
+    //update gfx
+    this.drawPiece(col, row, piece.team);
   }
 }

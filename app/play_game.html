@@ -59,11 +59,8 @@
 
     .dropdown:hover .dropdown-content {display: block;}
   </style>
-
-
 </head>
 <body>
-
 <ul>
   <li><a class="active" href="index.html">Home</a></li>
   <li class="dropdown">
@@ -86,17 +83,5 @@
   window.onload = function(e) {
     ui.prepareBoard();
   };
-
-  //code adapted from https://github.com/websockets/ws#simple-server and https://flaviocopes.com/node-websockets/
-  function test() {
-    const url = 'ws://localhost:8080'
-    const connection = new WebSocket(url)
-    connection.onopen = () => {
-      connection.send('hey')
-    }
-    connection.onerror = error => {
-      console.log(`WebSocket error: ${error}`)
-    }
-  }
 </script>
 </html>

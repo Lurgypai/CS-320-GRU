@@ -1,23 +1,72 @@
-const readline = require("readline");
 const lib = require("./board.js");
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+
+const SocketLib = require('ws');
+
+class Room {
+  constructor(id, host) {
+    this.board = new lib.Board();
+    this.id = id;
+    this.host = host;
+    this.second = 0;
+  }
+}
+
+class Connection {
+  constructor(ws, id) {
+    this.ws = ws;
+    this.id = id;
+  }
+}
+
 
 class Server {
-  start() {
-    const WebSocket = require('ws')
-    console.log("Starting server...")
+  constructor() {
+    this.rooms = new Map();
+    this.wss = new SocketLib.Server({ port: 8080 })
+    this.clients = [];
 
-    const wss = new WebSocket.Server({ port: 8080 })
+    const server = this;
 
-    wss.on('connection', ws => {
+    this.wss.on('connection', ws => {
+      console.log("Connection Received...");
+      this.clients.push(new Connection(ws, this.clients.length + 1));
+      let connectAccept = {id: 1, peerId: this.clients.length};
+      //send connection accept
+      ws.send(JSON.stringify(connectAccept));
+      console.log("Sent connection accepted: " + JSON.stringify(connectAccept));
+
+      //prepare move reading
       ws.on('message', message => {
-        console.log(`Received message => ${message}`)
-      })
-      ws.send("true")
-    })
+        let parsed = JSON.parse(message);
+        console.log("received message: " + message);
+        //room join request
+        if(parsed.id === 3) {
+          if(server.rooms.has(parsed.roomId)) {
+            const room = server.rooms.get(parsed.roomId);
+            room.second = parsed.peerId;
+            console.log("Joining: " + parsed.peerId + " to " + parsed.roomId);
+          } else {
+            server.rooms.set(parsed.roomId, new Room(parsed.roomId, parsed.peerId));
+            console.log("Creating room " + parsed.roomId + " with host " + parsed.peerId);
+          }
+          this.clients[parsed.peerId - 1].ws.send(message);
+        }
+        if(parsed.id === 2) {
+          const room = server.rooms.get(parsed.roomId);
+          room.board.movePiece(parsed.pieceId, parsed.x, parsed.y);
+
+          this.clients[room.host - 1].ws.send(message);
+          if(room.second !== 0)
+            this.clients[room.second - 1].ws.send(message);
+        }
+      });
+    });
+  }
+
+  sendAll(message) {
+    for(const client of this.clients) {
+      client.ws.send(message);
+    }
   }
 }
 
@@ -50,31 +99,7 @@ class Game {
     this.curPlayer = (this.curPlayer % 2) + 1;
   }
 
-  runGame() {
-    this.consolePlayerMove();
-  }
-
-
-  //callback that calls itself
-  consolePlayerMove(move) {
-    const game = this;
-
-    rl.question("Player " + game.curPlayer + ", enter a piece position: ", function (pos) {
-      console.log(pos);
-      rl.question("Player " + game.curPlayer + ", enter a move position: ", function (pos) {
-        console.log(pos);
-        game.switchPlayer();
-        game.consolePlayerMove();
-      });
-    });
-  }
 }
 
 
-
-//class containing board data
-
 var server = new Server();
-server.start();
-var game = new Game();
-game.startGame();
