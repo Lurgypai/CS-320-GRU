@@ -153,16 +153,22 @@ class UI {
 
 
 // this can be reutilized to be passed arguments from Board to print the desired piece.
-  drawPiece(x, y, team) {
+  drawPiece(x, y, team, king) {
     let img = new Image();
     const canvasContext = this.canvasContext;
     img.onload = function () {
       canvasContext.drawImage(img, x*100, y*100);
     }
-    if(team === 1)
+    if(team === 1) {
       img.src = 'black_piece.png';
-    else
+      if(king)
+        img.src = 'blackking_piece.png';
+    }
+    else {
       img.src = 'red_piece.png';
+      if(king)
+        img.src = 'redking_piece.png';
+    }
   }
 
   clearPosition(x, y) {
@@ -177,6 +183,6 @@ class UI {
     this.clearPosition(piece.col, piece.row);
     this.board.movePiece(pieceId, col, row);
     //update gfx
-    this.drawPiece(col, row, piece.team);
+    this.drawPiece(col, row, piece.team, piece.king);
   }
 }

@@ -246,6 +246,10 @@ class Board
     piece.row = newY;
     piece.col = newX;
     this.data[newY][newX] = pieceId;
+
+    if((piece.team === 1 && newY === this.height - 1) || (piece.team === 2 && newY === 0)) {
+      piece.king = true;
+    }
   }
 }
 module.exports = {Board};
