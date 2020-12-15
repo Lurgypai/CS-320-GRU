@@ -23,7 +23,19 @@ class UI {
   handleClick(element) {
     const row = element.row;
     const col = element.col;
-    this.selectedPieceId = this.board.data[row][col];
+    const clickedPieceId = this.board.data[row][col];
+    if(this.selectedPieceId) {
+      if(!clickedPieceId) {
+        const piece = this.board.pieces.get(this.selectedPieceId);
+        this.clearPosition(piece.col, piece.row);
+        this.board.movePiece(this.selectedPieceId, col, row);
+        this.selectedPieceId = 0;
+        //update gfx
+        this.drawPiece(col, row, piece.team);
+      }
+    } else {
+      this.selectedPieceId = clickedPieceId;
+    }
   }
 
   prepareBoard() {
@@ -96,12 +108,23 @@ class UI {
     });
   }
 
+
 // this can be reutilized to be passed arguments from Board to print the desired piece.
-  drawPiece(context, element) {
+  drawPiece(x, y, team) {
     let img = new Image();
+    const canvasContext = this.canvasContext;
     img.onload = function () {
-      context.drawImage(img, element.left, element.top);
+      canvasContext.drawImage(img, x*100, y*100);
     }
-    img.src = 'black_piece.png';
+    if(team === 1)
+      img.src = 'black_piece.png';
+    else
+      img.src = 'red_piece.png';
+  }
+
+  clearPosition(x, y) {
+    const element = this.elements[x + y * this.board.width];
+    this.canvasContext.fillStyle = element.colour;
+    this.canvasContext.fillRect(element.left, element.top, element.width, element.height);
   }
 }
