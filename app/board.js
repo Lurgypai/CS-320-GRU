@@ -237,6 +237,8 @@ class Board
     const piece = this.pieces.get(pieceId);
 
     this.data[piece.row][piece.col] = 0;
+    piece.row = newY;
+    piece.col = newX;
     this.data[newY][newX] = pieceId;
   }
 }

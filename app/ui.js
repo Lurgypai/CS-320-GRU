@@ -8,6 +8,7 @@ class UI {
     this.elements = [];
     this.board = new Board();
     this.board.fillBoard();
+    this.selectedPieceId = 0;
 
     this.targetUrl = 'ws://localhost:8080'
     this.connection = new WebSocket(this.targetUrl);
@@ -16,16 +17,13 @@ class UI {
       console.log(e);
     }
 
-    this.board.movePiece(1, 1, 4);
-    this.board.movePiece(6, 3, 4);
     this.board.printBoard();
   }
 
   handleClick(element) {
     const row = element.row;
     const col = element.col;
-    const pieceId = this.board.data[row][col];
-    console.log(this.board.getValidMoves(pieceId));
+    this.selectedPieceId = this.board.data[row][col];
   }
 
   prepareBoard() {
