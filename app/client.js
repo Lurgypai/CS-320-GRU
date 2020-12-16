@@ -62,11 +62,15 @@ class GameClient {
       this.ui.makeMove(parsed.pieceId, parsed.x, parsed.y);
     }
     if(parsed.id === 5) {
+      console.log("Received turn notification")
+      this.ui.displayTurn(parsed.name, parsed.team);
       if(parsed.team === this.ui.teamId) {
-        console.log("Received turn notification")
-        this.ui.displayTurn(parsed.name);
+        console.log("Our turn");
         this.ui.waiting = false;
       }
+    }
+    if(parsed.id === 6) {
+      this.ui.setDisplayNames(parsed.name1, parsed.name2);
     }
   }
 }
