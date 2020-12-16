@@ -25,7 +25,9 @@ class GameClient {
         console.log("requesting a room:" + JSON.stringify(roomRequest));
       }
       if(parsed.id === 3) {
+        console.log("Joining room " + parsed.roomId + " as player " + parsed.team);
         this.roomId = parsed.roomId;
+        this.ui.teamId = parsed.team;
       }
       if(parsed.id === 4) {
         Object.assign(this.ui.board, JSON.parse(parsed.board));
@@ -40,6 +42,8 @@ class GameClient {
           this.ui.board.pieces.set(piece.id, piece)
         }
         this.ui.prepareBoard();
+        if(parsed.teamId !== this.ui.teamId)
+          this.ui.waiting = false;
       }
       this.onReceive(message.data);
     }
@@ -59,7 +63,8 @@ class GameClient {
     var parsed = (JSON).parse(message);
     if(parsed.id === 2) {
       this.ui.makeMove(parsed.pieceId, parsed.x, parsed.y);
-      this.ui.waiting = false;
+      if(parsed.teamId !== this.ui.teamId)
+        this.ui.waiting = false;
     }
   }
 }

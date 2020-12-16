@@ -11,6 +11,7 @@ connect_accept
 {
   id: 1
   peerId:
+  teamId
 }
 
 room
@@ -30,6 +31,7 @@ make_move
   moveX:
   moveY:
   peerId
+  teamId
 }
 
 server->client
@@ -38,6 +40,7 @@ send_board
   id: 4
   board
   pieces
+  currTeam
 }
 */
 
@@ -51,7 +54,8 @@ class UI {
     this.board = new Board();
     this.client = new GameClient(this);
     this.selectedPieceId = 0;
-    this.waiting = false;
+    this.waiting = true;
+    this.teamId = 0;
 
     this.board.printBoard();
   }
@@ -59,7 +63,11 @@ class UI {
   handleClick(element) {
     const row = element.row;
     const col = element.col;
-    const clickedPieceId = this.board.data[row][col];
+    let clickedPieceId = this.board.data[row][col];
+    console.log("Selected piece " + clickedPieceId);
+    if(clickedPieceId && this.board.pieces.get(clickedPieceId).team !== this.teamId)
+      clickedPieceId = 0;
+
     if(!this.waiting) {
       if (this.selectedPieceId) {
         if (!clickedPieceId) {
