@@ -142,15 +142,17 @@ class Server {
       });
 
       ws.on('close', e => {
+        let toDeleteIds = [];
+
         for(let i = 0; i !== this.clients.length; ++i) {
           const connection = this.clients[i];
           if(connection.ws.readyState === SocketLib.CLOSED) {
             console.log("Client " + (i + 1) + " disconnected, marking as free");
-            this.freeClients.push(i + 1);
+            toDeleteIds.push(i + 1);
           }
         }
 
-        for(const freeId of this.freeClients) {
+        for(const freeId of toDeleteIds) {
           console.log("Handling freed client " + freeId);
           this.clients[freeId - 1].name = "None";
           this.rooms.forEach(value => {
@@ -175,6 +177,7 @@ class Server {
               console.log("Room " + value.id + " is empty, clearing.");
             }
           });
+          this.freeClients.push(freeId);
         }
       });
     });

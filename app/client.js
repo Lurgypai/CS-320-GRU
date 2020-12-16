@@ -73,9 +73,4 @@ class GameClient {
       this.ui.setDisplayNames(parsed.name1, parsed.name2);
     }
   }
-
-  requestReset() {
-    const resetRequest = {id:7,roomId:this.roomId};
-    this.connection.send(JSON.stringify(resetRequest));
-  }
 }
