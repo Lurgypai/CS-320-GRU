@@ -99,6 +99,7 @@
     </div>
   </div>
 </div>
+
 <div id="player_names" style="display: none">
   <div id="player1" style="margin-left: 410px; font-size: xx-large; position: absolute; display: block">
     Player 1:
@@ -115,7 +116,7 @@
   </div>
 </div>
 <div id="game_over_buttons" style="width: 100%; margin-top: 600px; position: absolute; display: none">
-  <div class="ui button" onclick="restartGame()">
+  <div id="restart_button" class="ui button" onclick="restartGame()">
     Play Again
   </div>
   <div class="ui button" onclick="location.href = 'play_game.html'">
@@ -148,11 +149,14 @@
   }
   HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 
+  const url = 'ws://localhost:8080'
+  //const url = 'ws://167.99.14.174:8080'
+
   function startGame() {
     let code = document.getElementById("code_input");
     let name = document.getElementById("name_input");
     document.getElementById("room_code").innerHTML = "Room Code: " + code.value;
-    let ui = new UI();
+    let ui = new UI(url);
     ui.client.roomId = code.value;
     ui.client.name = name.value.substr(0, 7);
     let menu = document.getElementById("menu");
@@ -161,12 +165,18 @@
     board.style.display="block";
     let playerNames = document.getElementById("player_names");
     playerNames.style.display="block";
-    let game_over = document.getElementById("game_over_buttons");
-    game_over.style.display="block";
   }
 
   function restartGame() {
-    // add restart game function here
+    const code = document.getElementById("code_input");
+    const connection = new WebSocket(url);
+    connection.onopen = () => {
+      const resetRequest = {id:7,roomId:code.value};
+      connection.send(JSON.stringify(resetRequest));
+    };
+
+    let playerNames = document.getElementById("game_over_buttons");
+    playerNames.style.display="none";
   }
 </script>
 </html>

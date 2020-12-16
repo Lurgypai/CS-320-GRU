@@ -65,14 +65,14 @@ reset
 */
 
 class UI {
-  constructor() {
+  constructor(url) {
     this.boardCanvas = document.getElementById('board');
     this.canvasLeft = this.boardCanvas.offsetLeft + this.boardCanvas.clientLeft;
     this.canvasTop = this.boardCanvas.offsetTop + this.boardCanvas.clientTop;
     this.canvasContext = this.boardCanvas.getContext('2d');
     this.elements = [];
     this.board = new Board();
-    this.client = new GameClient(this);
+    this.client = new GameClient(this, url);
     this.selectedPieceId = 0;
     this.waiting = true;
     this.jumping = false;
@@ -325,11 +325,18 @@ class UI {
         this.displayWin();
       else
         this.displayLoss();
-    } else if (!team1Pieces) {
+
+      let game_over = document.getElementById("game_over_buttons");
+      game_over.style.display="block";
+    }
+    else if (!team1Pieces) {
       if(this.teamId === 2)
         this.displayWin();
       else
         this.displayLoss();
+
+      let game_over = document.getElementById("game_over_buttons");
+      game_over.style.display="block";
     }
   }
 }

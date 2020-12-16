@@ -78,7 +78,7 @@ class Server {
           }
           else {
             server.rooms.set(parsed.roomId, new Room(parsed.roomId, parsed.peerId));
-            server.rooms.get(parsed.roomId).board.fillBoard();
+            server.rooms.get(parsed.roomId).board.debugBoard();
             console.log("Creating room " + parsed.roomId + " with host " + parsed.peerId);
             parsed["team"] = 1;
           }

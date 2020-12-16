@@ -1,6 +1,6 @@
 class GameClient {
-  constructor(ui) {
-    this.targetUrl = 'ws://localhost:8080'
+  constructor(ui, url) {
+    this.targetUrl = url;
     this.connection = new WebSocket(this.targetUrl);
     this.peerId = 0;
     this.roomId = "";
