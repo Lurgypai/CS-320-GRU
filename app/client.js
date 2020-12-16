@@ -5,6 +5,7 @@ class GameClient {
     this.peerId = 0;
     this.roomId = "";
     this.ui = ui;
+    this.name = "fred";
 
     this.connection.onopen = () => {
     }
@@ -14,6 +15,9 @@ class GameClient {
       console.log(parsed);
       if(parsed.id === 1) {
         this.peerId = parsed.peerId;
+
+        const connect = {peerId:this.peerId,id:0,name:this.name }
+        this.connection.send(JSON.stringify(connect));
 
         let roomRequest = {peerId: this.peerId, id: 3, roomId: this.roomId};
         this.connection.send(JSON.stringify(roomRequest));
@@ -59,8 +63,19 @@ class GameClient {
     }
     if(parsed.id === 5) {
       console.log("Received turn notification")
-      this.ui.displayTurn();
-      this.ui.waiting = false;
+      this.ui.displayTurn(parsed.name, parsed.team);
+      if(parsed.team === this.ui.teamId) {
+        console.log("Our turn");
+        this.ui.waiting = false;
+      }
     }
+    if(parsed.id === 6) {
+      this.ui.setDisplayNames(parsed.name1, parsed.name2);
+    }
+  }
+
+  requestReset() {
+    const resetRequest = {id:7,roomId:this.roomId};
+    this.connection.send(JSON.stringify(resetRequest));
   }
 }

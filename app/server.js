@@ -30,6 +30,7 @@ class Connection {
   constructor(ws, id) {
     this.ws = ws;
     this.id = id;
+    this.name = "";
   }
 }
 
@@ -66,37 +67,26 @@ class Server {
         console.log("received message: " + message);
         //room join request
         if(parsed.id === 3) {
-          let joined = false;
 
           if(server.rooms.has(parsed.roomId)) {
             const currRoom = server.rooms.get(parsed.roomId);
             const team = currRoom.joinPlayer(parsed.peerId);
             if(team) {
-              joined = true;
               console.log("Joining: " + parsed.peerId + " to " + parsed.roomId + " as player " + team);
               parsed["team"] = team;
-
-              console.log("Notifying player its their turn...");
-              let turnData = {id:5};
-              if(currRoom.currTeam === 1) {
-                this.clients[currRoom.host - 1].ws.send(JSON.stringify(turnData));
-              } else if (currRoom.currTeam === 2) {
-                this.clients[currRoom.second - 1].ws.send(JSON.stringify(turnData));
-              }
             }
-          } else {
-            joined = true;
+          }
+          else {
             server.rooms.set(parsed.roomId, new Room(parsed.roomId, parsed.peerId));
             server.rooms.get(parsed.roomId).board.fillBoard();
             console.log("Creating room " + parsed.roomId + " with host " + parsed.peerId);
             parsed["team"] = 1;
           }
-          if(joined) {
-            const currRoom = server.rooms.get(parsed.roomId);
-            //convert it back and send (team field added)
-            this.clients[parsed.peerId - 1].ws.send(JSON.stringify(parsed));
-            this.sendBoardTo(parsed.roomId, parsed.peerId);
-          }
+
+          this.clients[parsed.peerId - 1].ws.send(JSON.stringify(parsed));
+          this.sendBoardTo(parsed.roomId, parsed.peerId);
+          this.notifyRoomOfNames(parsed.roomId);
+          this.notifyRoomOfTurn(parsed.roomId);
         }
         if(parsed.id === 2) {
           const room = server.rooms.get(parsed.roomId);
@@ -104,30 +94,38 @@ class Server {
 
           parsed["teamId"] = room.currTeam;
 
-          let turnData = {id:5};
           const canJump = room.board.getMoves(parsed.pieceId, 2).length;
 
           if(!jumpedPiece || !canJump) {
             if (parsed.teamId === 1) {
               room.currTeam = 2;
-              console.log("Notifying second player its their turn...");
-              this.clients[room.second - 1].ws.send(JSON.stringify(turnData));
             }
             if (parsed.teamId === 2) {
               room.currTeam = 1;
-              console.log("Notifying host player its their turn...");
-              this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
             }
-          } else if (canJump) {
-            console.log("Notifying player they can keep jumping...");
-            this.clients[parsed.peerId - 1].ws.send(JSON.stringify(turnData));
           }
 
-          if(room.host !== 0)
-            this.clients[room.host - 1].ws.send(message);
-          if(room.second !== 0)
-            this.clients[room.second - 1].ws.send(message);
+          this.notifyRoomOfTurn(parsed.roomId);
 
+          if(room.host !== 0) {
+            console.log("sending move data and turn data to host");
+            this.clients[room.host - 1].ws.send(message);
+          }
+          if(room.second !== 0) {
+            console.log("sending move data and turn data to second");
+            this.clients[room.second - 1].ws.send(message);
+          }
+
+        }
+        if(parsed.id === 0) {
+          this.clients[parsed.peerId - 1].name = parsed.name;
+        }
+        if(parsed.id === 7) {
+          const room = this.rooms.get(parsed.roomId);
+          room.board.fillBoard();
+          this.sendBoardTo(parsed.roomId, room.host);
+          this.sendBoardTo(parsed.roomId, room.second);
+          this.notifyRoomOfTurn(parsed.roomId);
         }
       });
 
@@ -146,10 +144,12 @@ class Server {
             if(value.host === freeId) {
               value.host = 0;
               console.log("Host of room " + value.id + " exited");
+              this.notifyRoomOfNames(value.id)
             }
             if(value.second === freeId) {
               value.second = 0;
-              console.log("Host of room " + value.id + " exited");
+              console.log("Second of room " + value.id + " exited");
+              this.notifyRoomOfNames(value.id)
             }
             //if the room is now empty
             if(value.host === 0 && value.second === 0) {
@@ -160,6 +160,21 @@ class Server {
         }
       });
     });
+  }
+
+  notifyRoomOfTurn(roomId) {
+    const room = this.rooms.get(roomId);
+    const currClientId = room.currTeam === 1 ? room.host : room.second;
+    const currClient = this.clients[currClientId-1];
+    const turnData = {id: 5, team:room.currTeam, name:currClient.name};
+    if(room.host !== 0) {
+      console.log("sending turn data to host");
+      this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
+    }
+    if(room.second !== 0) {
+      console.log("sending turn data to second");
+      this.clients[room.second - 1].ws.send(JSON.stringify(turnData));
+    }
   }
 
   sendBoardTo(roomId, peerId) {
@@ -176,6 +191,36 @@ class Server {
   sendAll(message) {
     for(const client of this.clients) {
       client.ws.send(message);
+    }
+  }
+
+  notifyRoomOfNames(roomId) {
+    const room = this.rooms.get(roomId);
+
+    let name1 = "None", name2 = "None";
+    let hasHost = false, hasSecond = false;
+
+    if(room.host) {
+      const host = this.clients[room.host - 1];
+      name1 = host.name;
+      hasHost = true;
+    }
+
+    if(room.second) {
+      const second = this.clients[room.second - 1];
+      name2 = second.name;
+      hasSecond = true;
+    }
+
+    const roomData = {id: 6, name1:name1, name2:name2};
+    if(hasHost) {
+      console.log("sending turn data to host");
+      this.clients[room.host - 1].ws.send(JSON.stringify(roomData));
+    }
+
+    if(hasSecond) {
+      console.log("sending turn data to second");
+      this.clients[room.second - 1].ws.send(JSON.stringify(roomData));
     }
   }
 }

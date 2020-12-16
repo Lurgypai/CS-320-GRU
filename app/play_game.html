@@ -5,7 +5,7 @@
   <script src = "board.js"></script>
   <script src = "client.js"></script>
   <script src = "ui.js"></script>
-  <script src = "test_server.js"></script>
+  <script src = "server.js"></script>
   <script src="mainMenuScripts.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />
   <title>SuperCheck</title>
@@ -102,16 +102,16 @@
 <div id="player_names" style="display: none">
   <div id="player1" style="margin-left: 410px; font-size: xx-large; position: absolute; display: block">
     Player 1:
-    <div id="player1_name" style="margin-top: 20px">Fred</div>
+    <div id="player1_name" style="margin-top: 20px">None</div>
     <br>
-    <div id="player1_turn"> Your turn</div>
+    <div id="player1_turn">Your turn</div>
   </div>
   <div id="player2" style="margin-left: 1380px; font-size: xx-large; position: absolute; display: block;">
     Player 2:
     <br>
-    <div id="player2_name" style="margin-top: 20px">Gojg</div>
+    <div id="player2_name" style="margin-top: 20px">None</div>
     <br>
-    <div id="player2_turn"> Waiting</div>
+    <div id="player2_turn">Waiting</div>
   </div>
 </div>
 <div id="game_over_buttons" style="width: 100%; margin-top: 600px; position: absolute; display: none">
@@ -150,9 +150,11 @@
 
   function startGame() {
     let code = document.getElementById("code_input");
+    let name = document.getElementById("name_input");
     document.getElementById("room_code").innerHTML = "Room Code: " + code.value;
     let ui = new UI();
     ui.client.roomId = code.value;
+    ui.client.name = name.value.substr(0, 7);
     let menu = document.getElementById("menu");
     menu.style.display="none";
     let board = document.getElementById("board");

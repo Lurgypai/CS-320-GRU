@@ -45,9 +45,22 @@ send_board
 }
 
 server->client
-your_turn
+turn_data
 {
   id: 5
+  team:
+  name:
+}
+name_data
+{
+  id: 6
+  name1
+  name2
+}
+reset
+{
+  id:7;
+  roomId:
 }
 */
 
@@ -257,11 +270,20 @@ class UI {
   }
 
 
-  displayTurn() {
-    alert("your turn!")
+  setDisplayNames(name1, name2) {
+    document.getElementById("player1_name").innerHTML = name1;
+    document.getElementById("player2_name").innerHTML = name2;
   }
 
-  clearTurnDisplay() {
+  displayTurn(name, teamId) {
+    if(teamId === 1) {
+      document.getElementById("player1_turn").innerHTML = "Your Turn!";
+      document.getElementById("player2_turn").innerHTML = "Waiting...";
+    }
+    else {
+      document.getElementById("player2_turn").innerHTML = "Your Turn!";
+      document.getElementById("player1_turn").innerHTML = "Waiting...";
+    }
   }
 
   makeMove(pieceId, col, row) {
