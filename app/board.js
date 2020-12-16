@@ -220,7 +220,7 @@ class Board
 
     let validPieces = [];
 
-    this.pieces.forEach(function(currPiece) {
+    this.pieces.forEach(currPiece => {
       console.log("Currpiece team: " + currPiece.team + " teamId: " + teamId);
       if (currPiece.team === teamId && this.getValidMoves(currPiece).length !== 0) {
         validPieces.push();

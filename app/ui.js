@@ -42,6 +42,12 @@ send_board
   pieces
   currTeam
 }
+
+server->client
+your_turn
+{
+  id: 5
+}
 */
 
 class UI {

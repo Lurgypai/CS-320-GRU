@@ -42,8 +42,6 @@ class GameClient {
           this.ui.board.pieces.set(piece.id, piece)
         }
         this.ui.prepareBoard();
-        if(parsed.teamId !== this.ui.teamId)
-          this.ui.waiting = false;
       }
       this.onReceive(message.data);
     }
@@ -63,8 +61,10 @@ class GameClient {
     var parsed = (JSON).parse(message);
     if(parsed.id === 2) {
       this.ui.makeMove(parsed.pieceId, parsed.x, parsed.y);
-      if(parsed.teamId !== this.ui.teamId)
-        this.ui.waiting = false;
+    }
+    if(parsed.id === 5) {
+      console.log("Received turn notification")
+      this.ui.waiting = false;
     }
   }
 }
