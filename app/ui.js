@@ -282,10 +282,11 @@ class UI {
     this.drawPiece(col, row, piece.team, piece.king);
 
     if(this.jumping) {
-      this.highlightAvailableMoves();
       if(!this.board.getMoves(this.selectedPieceId, 2).length) {
         this.jumping = false;
         this.selectedPieceId = 0;
+      } else {
+        this.highlightAvailableMoves();
       }
     }
 
