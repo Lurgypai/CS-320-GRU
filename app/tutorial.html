@@ -6,169 +6,39 @@
 </head>
 
 <body>
-<h2 style="text-align: center">How To Play</h2>
-<div style="background-color: grey; overflow: auto; width: 1000px; height: 770px; margin: auto;"><br>
-  <div style="background-color: lightgrey; overflow: auto; width: 950px; height: 730px; margin: auto;">
-    <p style="text-align: center; font-size: large;"><br>This game follows most standards of American checkers where,<br></p>
-    <p style="text-align: left; font-size: large;">
-      •Pawns are only able to move diagonally and forward one square.<br><br>
-      •To capture a piece you must jump over it (diagonally), multi-jumps are allowed but they must all capture one piece per jump.<br><br>
-      •It is not enforced that a player jumps a piece and instead can opt not to, unless they are committing a multi-jump.<br><br>
-      •Captured pieces are then removed from the board and game.<br><br>
-      •Once a piece reaches the other side of the board it becomes a King.<br><br>
-      •King pieces follow the same rules however they are allowed to move to squares that are diagonally backwards and jump backwards.<br><br>
-      •To win you must capture all enemy pieces or prohibit the other player from being able to move any of their pieces.<br><br></p>
-    <p style="text-align: center; font-size: large;">To start playing,</p>
-    <p style="text-align: left; font-size: large">
-      •Choose the game option you wish to play, by choosing to either host or join a game.<br><br>
-      •If you are hosting wait until the other player joins, if you are joining then you will need to enter the username of the person hosting.<br><br>
-      •Once they connect this should transport you to the game page where the board will be displayed, Black will always move first.<br><br>
-      •After completing a game the menu at the top will allow players to reset the game to play again or cancel the game.<br><br>
-    <p style="text-align: center; font-size: large;">When you are ready to play return with the button below!</p>
-    </p>
+  <h2 style="text-align: center">How To Play</h2>
+  <div style="background-color: grey; overflow: auto; width: 1000px; height: 800px; margin: auto;"><br>
+    <div style="background-color: lightgrey; overflow: auto; width: 950px; height: 760px; margin: auto;">
+      <p style="text-align: center; font-size: large;"><br>This game follows most standards of American checkers with some adaptations where,<br></p>
+      <p style="text-align: left; font-size: large;">
+        •Pawns are only able to move diagonally and forward one square.<br><br>
+        •After selecting a piece possible positions it can move to will be highlighted on the board.<br><br>
+        •To capture a piece you must jump over it (diagonally), multi-jumps are allowed but they must all capture one piece per jump.<br><br>
+        •It is not enforced that a player jumps a piece and instead can opt not to, unless they are committing a multi-jump.<br><br>
+        •Captured pieces are then removed from the board and game.<br><br>
+        •Once a piece reaches the other side of the board it becomes a King.<br><br>
+        •King pieces follow the same rules however they are allowed to move to squares that are diagonally backwards and jump backwards.<br><br>
+        •To win you must capture all enemy pieces or prohibit the other player from being able to move any of their pieces.<br><br></p>
+      <p style="text-align: center; font-size: large;">To start playing,</p>
+      <p style="text-align: left; font-size: large">
+        •Choose the "Play Game" option when you wish to play, feel free to enter any username you would like.<br><br>
+        •From this point you need to first enter your room join code, if you plan to host it will be how others connect to you.<br><br>
+        •If you are hosting wait until the other player joins, those joining will need to enter the join code of the person hosting.<br><br>
+        •Once they connect this should setup the game page where the board will be displayed, Black will always move first.<br><br>
+        •After completing a game players can feel free to return to the landing page via the home button.<br><br>
+      <p style="text-align: center; font-size: large;">When you are ready to play, return with the button below!</p>
+      </p>
+    </div>
   </div>
-</div>
-<br>
-<div class="text-center" style="text-align: center">
-  <button onclick="goBack()" style="width: 90px; height: 45px;">Return</button>
-</div>
+  <br>
+  <div class="text-center" style="text-align: center">
+    <button onclick="goBack()" style="width: 90px; height: 45px;">Return</button>
+  </div>
 </body>
+
 <script>
   function goBack() {
     window.history.back();
   }
 </script>
-
-
-
-
-
-
-
-<!--
-<body onload="getWins(); getNames();">
-  <style>
-  h1 {text-align: center;}
-  h1 {color: darkred;}
-  h1 {border-style: double;}
-
-  p1 {font-size: large}
-  p1 {border-bottom-style: solid}
-
-  pNum {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-  }
-
-  #container {
-    background-color: darkgrey;
-    color: black;
-    font-size: large;
-    overflow: hidden;
-  }
-  .wins {
-    background-color: grey;
-    color: black;
-  }
-  .text-center {text-align: center;}
-  </style>
-
-  <h1>LeaderBoard</h1>
-
-  <div class="text-center">
-    <button onclick="goBack()">Return</button>
-  </div>
-
-  <p1>Players & Wins</p1>
-
-  <br>
-  <br>
-
-  <div id="container">
-    <div class="row">
-      <div class="userName"></div><div class="wins">Wins: <pNum class="numTxt"></pNum> </div>
-    </div>
-
-    <div class="row">
-      <div class="userName"></div>
-        <div class="wins">Wins: <pNum class="numTxt"></pNum> </div>
-    </div>
-
-    <div class="row">
-      <div class="userName"></div>
-        <div class="wins">Wins: <pNum class="numTxt"></pNum></div>
-    </div>
-
-    <div class="row">
-      <div class="userName"></div>
-        <div class="wins">Wins: <pNum class="numTxt"></pNum></div>
-    </div>
-
-    <div class="row">
-      <div class="userName"></div>
-        <div class="wins">Wins: <pNum class="numTxt"></pNum></div>
-    </div>
-  </div>
-
-  <br>
-
-  <div class="text-center"> <button onclick="goBack()">Return</button>
-  </div>
-
-
-  <script>
-    //getWins will be updated when a player wins this is its placeholder for now (might help?)
-    function getWins() {
-      let name = document.getElementsByClassName("numTxt");
-      for (let y in name) {
-        name[y].innerHTML = Math.floor(Math.random() * 100);
-      }
-    }
-
-    //getNames is the same as above but will be the username (could be updated as soon as a username is made but maybe not the best approach)
-    function getNames() {
-      let name = document.getElementsByClassName("userName");
-      let first = generateName();
-      let numArr = [];
-      let strArr = [];
-      for(let x in name){
-        let z = Math.floor(Math.random()*10);
-        if (numArr.includes(z)){
-          z += 10;//scale by 10 so no repeat possible
-        }
-        if (strArr.includes(first)) {
-          first = generateName();
-        }
-
-        strArr[x] = first;
-        numArr[x] = z;
-        name[x].innerHTML = first + " " + z;
-      }
-    }
-
-    //simple function to return
-    function goBack() {
-      window.history.back();
-    }
-
-    //These generate random usernames for getNames();
-    function capFirst(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    function generateName(){
-      const name1 = ["abandoned","able","absolute","adorable","adventurous","academic","acceptable","acclaimed","accomplished","accurate","aching","acidic","acrobatic","active","actual","adept","admirable","admired","adolescent","adorable","adored","advanced","afraid","affectionate","aged","aggravating","aggressive","agile","agitated","agonizing","agreeable","ajar","alarmed","alarming","alert","alienated","alive","all","altruistic","amazing","ambitious","ample","amused","amusing","anchored","ancient","angelic","angry","anguished","animated","annual","another","antique","anxious","any","apprehensive","appropriate","apt","arctic","arid","aromatic","artistic","ashamed","assured","astonishing","athletic","attached","attentive","attractive","austere","authentic","authorized","automatic","avaricious","average","aware","awesome","awful","awkward","babyish","bad","back","baggy","bare","barren","basic","beautiful","belated","beloved","beneficial","better","best","bewitched","big","big-hearted","biodegradable","bite-sized","bitter","black","black-and-white","bland","blank","blaring","bleak","blind","blissful","blond","blue","blushing","bogus","boiling","bold","bony","boring","bossy","both","bouncy","bountiful","bowed","brave","breakable","brief","bright","brilliant","brisk","broken","bronze","brown","bruised","bubbly","bulky","bumpy","buoyant","burdensome","burly","bustling","busy","buttery","buzzing","calculating","calm","candid","canine","capital","carefree","careful","careless","caring","cautious","cavernous","celebrated","charming","cheap","cheerful","cheery","chief","chilly","chubby","circular","classic","clean","clear","clear-cut","clever","close","closed","cloudy","clueless","clumsy","cluttered","coarse","cold","colorful","colorless","colossal","comfortable","common","compassionate","competent","complete","complex","complicated","composed","concerned","concrete","confused","conscious","considerate","constant","content","conventional","cooked","cool","cooperative","coordinated","corny","corrupt","costly","courageous","courteous","crafty","crazy","creamy","creative","creepy","criminal","crisp","critical","crooked","crowded","cruel","crushing","cuddly","cultivated","cultured","cumbersome","curly","curvy","cute","cylindrical","damaged","damp","dangerous","dapper","daring","darling","dark","dazzling","dead","deadly","deafening","dear","dearest","decent","decimal","decisive","deep","defenseless","defensive","defiant","deficient","definite","definitive","delayed","delectable","delicious","delightful","delirious","demanding","dense","dental","dependable","dependent","descriptive","deserted","detailed","determined","devoted","different","difficult","digital","diligent","dim","dimpled","dimwitted","direct","disastrous","discrete","disfigured","disgusting","disloyal","dismal","distant","downright","dreary","dirty","disguised","dishonest","dismal","distant","distinct","distorted","dizzy","dopey","doting","double","downright","drab","drafty","dramatic","dreary","droopy","dry","dual","dull","dutiful","each","eager","earnest","early","easy","easy-going","ecstatic","edible","educated","elaborate","elastic","elated","elderly","electric","elegant","elementary","elliptical","embarrassed","embellished","eminent","emotional","empty","enchanted","enchanting","energetic","enlightened","enormous","enraged","entire","envious","equal","equatorial","essential","esteemed","ethical","euphoric","even","evergreen","everlasting","every","evil","exalted","excellent","exemplary","exhausted","excitable","excited","exciting","exotic","expensive","experienced","expert","extraneous","extroverted","extra-large","extra-small","fabulous","failing","faint","fair","faithful","fake","false","familiar","famous","fancy","fantastic","far","faraway","far-flung","far-off","fast","fat","fatal","fatherly","favorable","favorite","fearful","fearless","feisty","feline","female","feminine","few","fickle","filthy","fine","finished","firm","first","firsthand","fitting","fixed","flaky","flamboyant","flashy","flat","flawed","flawless","flickering","flimsy","flippant","flowery","fluffy","fluid","flustered","focused","fond","foolhardy","foolish","forceful","forked","formal","forsaken","forthright","fortunate","fragrant","frail","frank","frayed","free","French","fresh","frequent","friendly","frightened","frightening","frigid","frilly","frizzy","frivolous","front","frosty","frozen","frugal","fruitful","full","fumbling","functional","funny","fussy","fuzzy","gargantuan","gaseous","general","generous","gentle","genuine","giant","giddy","gigantic","gifted","giving","glamorous","glaring","glass","gleaming","gleeful","glistening","glittering","gloomy","glorious","glossy","glum","golden","good","good-natured","gorgeous","graceful","gracious","grand","grandiose","granular","grateful","grave","gray","great","greedy","green","gregarious","grim","grimy","gripping","grizzled","gross","grotesque","grouchy","grounded","growing","growling","grown","grubby","gruesome","grumpy","guilty","gullible","gummy","hairy","half","handmade","handsome","handy","happy","happy-go-lucky","hard","hard-to-find","harmful","harmless","harmonious","harsh","hasty","hateful","haunting","healthy","heartfelt","hearty","heavenly","heavy","hefty","helpful","helpless","hidden","hideous","high","high-level","hilarious","hoarse","hollow","homely","honest","honorable","honored","hopeful","horrible","hospitable","hot","huge","humble","humiliating","humming","humongous","hungry","hurtful","husky","icky","icy","ideal","idealistic","identical","idle","idiotic","idolized","ignorant","ill","illegal","ill-fated","ill-informed","illiterate","illustrious","imaginary","imaginative","immaculate","immaterial","immediate","immense","impassioned","impeccable","impartial","imperfect","imperturbable","impish","impolite","important","impossible","impractical","impressionable","impressive","improbable","impure","inborn","incomparable","incompatible","incomplete","inconsequential","incredible","indelible","inexperienced","indolent","infamous","infantile","infatuated","inferior","infinite","informal","innocent","insecure","insidious","insignificant","insistent","instructive","insubstantial","intelligent","intent","intentional","interesting","internal","international","intrepid","ironclad","irresponsible","irritating","itchy","jaded","jagged","jam-packed","jaunty","jealous","jittery","joint","jolly","jovial","joyful","joyous","jubilant","judicious","juicy","jumbo","junior","jumpy","juvenile","kaleidoscopic","keen","key","kind","kindhearted","kindly","klutzy","knobby","knotty","knowledgeable","knowing","known","kooky","kosher","lame","lanky","large","last","lasting","late","lavish","lawful","lazy","leading","lean","leafy","left","legal","legitimate","light","lighthearted","likable","likely","limited","limp","limping","linear","lined","liquid","little","live","lively","livid","loathsome","lone","lonely","long","long-term","loose","lopsided","lost","loud","lovable","lovely","loving","low","loyal","lucky","lumbering","luminous","lumpy","lustrous","luxurious","mad","made-up","magnificent","majestic","major","male","mammoth","married","marvelous","masculine","massive","mature","meager","mealy","mean","measly","meaty","medical","mediocre","medium","meek","mellow","melodic","memorable","menacing","merry","messy","metallic","mild","milky","mindless","miniature","minor","minty","miserable","miserly","misguided","misty","mixed","modern","modest","moist","monstrous","monthly","monumental","moral","mortified","motherly","motionless","mountainous","muddy","muffled","multicolored","mundane","murky","mushy","musty","muted","mysterious","naive","narrow","nasty","natural","naughty","nautical","near","neat","necessary","needy","negative","neglected","negligible","neighboring","nervous","new","next","nice","nifty","nimble","nippy","nocturnal","noisy","nonstop","normal","notable","noted","noteworthy","novel","noxious","numb","nutritious","nutty","obedient","obese","oblong","oily","oblong","obvious","occasional","odd","oddball","offbeat","offensive","official","old","old-fashioned","only","open","optimal","optimistic","opulent","orange","orderly","organic","ornate","ornery","ordinary","original","other","our","outlying","outgoing","outlandish","outrageous","outstanding","oval","overcooked","overdue","overjoyed","overlooked","palatable","pale","paltry","parallel","parched","partial","passionate","past","pastel","peaceful","peppery","perfect","perfumed","periodic","perky","personal","pertinent","pesky","pessimistic","petty","phony","physical","piercing","pink","pitiful","plain","plaintive","plastic","playful","pleasant","pleased","pleasing","plump","plush","polished","polite","political","pointed","pointless","poised","poor","popular","portly","posh","positive","possible","potable","powerful","powerless","practical","precious","present","prestigious","pretty","precious","previous","pricey","prickly","primary","prime","pristine","private","prize","probable","productive","profitable","profuse","proper","proud","prudent","punctual","pungent","puny","pure","purple","pushy","putrid","puzzled","puzzling","quaint","qualified","quarrelsome","quarterly","queasy","querulous","questionable","quick","quick-witted","quiet","quintessential","quirky","quixotic","quizzical","radiant","ragged","rapid","rare","rash","raw","recent","reckless","rectangular","ready","real","realistic","reasonable","red","reflecting","regal","regular","reliable","relieved","remarkable","remorseful","remote","repentant","required","respectful","responsible","repulsive","revolving","rewarding","rich","rigid","right","ringed","ripe","roasted","robust","rosy","rotating","rotten","rough","round","rowdy","royal","rubbery","rundown","ruddy","rude","runny","rural","rusty","sad","safe","salty","same","sandy","sane","sarcastic","sardonic","satisfied","scaly","scarce","scared","scary","scented","scholarly","scientific","scornful","scratchy","scrawny","second","secondary","second-hand","secret","self-assured","self-reliant","selfish","sentimental","separate","serene","serious","serpentine","several","severe","shabby","shadowy","shady","shallow","shameful","shameless","sharp","shimmering","shiny","shocked","shocking","shoddy","short","short-term","showy","shrill","shy","sick","silent","silky","silly","silver","similar","simple","simplistic","sinful","single","sizzling","skeletal","skinny","sleepy","slight","slim","slimy","slippery","slow","slushy","small","smart","smoggy","smooth","smug","snappy","snarling","sneaky","sniveling","snoopy","sociable","soft","soggy","solid","somber","some","spherical","sophisticated","sore","sorrowful","soulful","soupy","sour","Spanish","sparkling","sparse","specific","spectacular","speedy","spicy","spiffy","spirited","spiteful","splendid","spotless","spotted","spry","square","squeaky","squiggly","stable","staid","stained","stale","standard","starchy","stark","starry","steep","sticky","stiff","stimulating","stingy","stormy","straight","strange","steel","strict","strident","striking","striped","strong","studious","stunning","stupendous","stupid","sturdy","stylish","subdued","submissive","substantial","subtle","suburban","sudden","sugary","sunny","super","superb","superficial","superior","supportive","sure-footed","surprised","suspicious","svelte","sweaty","sweet","sweltering","swift","sympathetic","tall","talkative","tame","tan","tangible","tart","tasty","tattered","taut","tedious","teeming","tempting","tender","tense","tepid","terrible","terrific","testy","thankful","that","these","thick","thin","third","thirsty","this","thorough","thorny","those","thoughtful","threadbare","thrifty","thunderous","tidy","tight","timely","tinted","tiny","tired","torn","total","tough","traumatic","treasured","tremendous","tragic","trained","tremendous","triangular","tricky","trifling","trim","trivial","troubled","true","trusting","trustworthy","trusty","truthful","tubby","turbulent","twin","ugly","ultimate","unacceptable","unaware","uncomfortable","uncommon","unconscious","understated","unequaled","uneven","unfinished","unfit","unfolded","unfortunate","unhappy","unhealthy","uniform","unimportant","unique","united","unkempt","unknown","unlawful","unlined","unlucky","unnatural","unpleasant","unrealistic","unripe","unruly","unselfish","unsightly","unsteady","unsung","untidy","untimely","untried","untrue","unused","unusual","unwelcome","unwieldy","unwilling","unwitting","unwritten","upbeat","upright","upset","urban","usable","used","useful","useless","utilized","utter","vacant","vague","vain","valid","valuable","vapid","variable","vast","velvety","venerated","vengeful","verifiable","vibrant","vicious","victorious","vigilant","vigorous","villainous","violet","violent","virtual","virtuous","visible","vital","vivacious","vivid","voluminous","wan","warlike","warm","warmhearted","warped","wary","wasteful","watchful","waterlogged","watery","wavy","wealthy","weak","weary","webbed","wee","weekly","weepy","weighty","weird","welcome","well-documented","well-groomed","well-informed","well-lit","well-made","well-off","well-to-do","well-worn","wet","which","whimsical","whirlwind","whispered","white","whole","whopping","wicked","wide","wide-eyed","wiggly","wild","willing","wilted","winding","windy","winged","wiry","wise","witty","wobbly","woeful","wonderful","wooden","woozy","wordy","worldly","worn","worried","worrisome","worse","worst","worthless","worthwhile","worthy","wrathful","wretched","writhing","wrong","wry","yawning","yearly","yellow","yellowish","young","youthful","yummy","zany","zealous","zesty","zigzag","rocky"];
-      return capFirst(name1[getRandomInt(0, name1.length + 1)]);
-    }
-
-  </script>
-
-</body>
-
--->
 </html>
