@@ -66,11 +66,6 @@
 <ul>
   <li><a class="active" href="index.html">Home</a></li>
   <li class="dropdown">
-    <a href="javascript:void(0)" class="dropbutton">Settings</a>
-    <div class="dropdown-content">
-      <a onclick="resetGame(); return false;" href="play_game.html">Reset</a>
-      <a onclick="cancelGame(); return false;" href="play_game.html">Cancel</a>
-    </div>
   </li>
 </ul>
 
@@ -104,7 +99,24 @@
     </div>
   </div>
 </div>
-<canvas id="board" width="800" height="800" style="display: none; margin: 0 auto; margin-top: 40px"/>
+<div id="player_names" style="display: none">
+  <div id="player1" style="margin-left: 410px; font-size: xx-large; position: absolute; display: block">
+    Player 1:
+    <div id="player1_name" style="margin-top: 20px">Fred</div>
+    <br>
+    <div id="player1_turn"> Your turn</div>
+  </div>
+  <div id="player2" style="margin-left: 1380px; font-size: xx-large; position: absolute; display: block;">
+    Player 2:
+    <br>
+    <div id="player2_name" style="margin-top: 20px">Gojg</div>
+    <br>
+    <div id="player2_turn"> Waiting</div>
+  </div>
+</div>
+<canvas id="board" width="800" height="800" style="display: none; margin: 0 auto; margin-top: 35px"/>
+<br>
+
 </body>
 <script>
   //from https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
@@ -137,6 +149,8 @@
     menu.style.display="none";
     let board = document.getElementById("board");
     board.style.display="block";
+    let playerNames = document.getElementById("player_names");
+    playerNames.style.display="block";
   }
 </script>
 </html>
