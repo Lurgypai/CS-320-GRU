@@ -19,6 +19,7 @@ room
   peerId:
   id: 3
   roomId:
+  new:
 }
 
 client->server
