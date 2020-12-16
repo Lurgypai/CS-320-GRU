@@ -67,13 +67,22 @@ class Server {
         //room join request
         if(parsed.id === 3) {
           let joined = false;
+
           if(server.rooms.has(parsed.roomId)) {
-            const room = server.rooms.get(parsed.roomId);
-            const team = room.joinPlayer(parsed.peerId);
+            const currRoom = server.rooms.get(parsed.roomId);
+            const team = currRoom.joinPlayer(parsed.peerId);
             if(team) {
               joined = true;
               console.log("Joining: " + parsed.peerId + " to " + parsed.roomId + " as player " + team);
               parsed["team"] = team;
+
+              console.log("Notifying player its their turn...");
+              let turnData = {id:5};
+              if(currRoom.currTeam === 1) {
+                this.clients[currRoom.host - 1].ws.send(JSON.stringify(turnData));
+              } else if (currRoom.currTeam === 2) {
+                this.clients[currRoom.second - 1].ws.send(JSON.stringify(turnData));
+              }
             }
           } else {
             joined = true;
@@ -83,16 +92,10 @@ class Server {
             parsed["team"] = 1;
           }
           if(joined) {
+            const currRoom = server.rooms.get(parsed.roomId);
             //convert it back and send (team field added)
             this.clients[parsed.peerId - 1].ws.send(JSON.stringify(parsed));
-            const currRoom = server.rooms.get(parsed.roomId);
-            let pieces = [];
-            currRoom.board.pieces.forEach(value => {
-              pieces.push(JSON.stringify(value));
-            });
-            let boardState = { id: 4, board: JSON.stringify(server.rooms.get(parsed.roomId).board), pieces: pieces, currTeam: server.rooms.get(parsed.roomId).currTeam };
-            this.clients[parsed.peerId - 1].ws.send(JSON.stringify(boardState));
-            console.log("Sending board state...");
+            this.sendBoardTo(parsed.roomId, parsed.peerId);
           }
         }
         if(parsed.id === 2) {
@@ -101,15 +104,24 @@ class Server {
 
           parsed["teamId"] = room.currTeam;
 
-          if(parsed.teamId === 1)
+          let turnData = {id:5};
+
+          if(parsed.teamId === 1) {
             room.currTeam = 2;
-          if(parsed.teamId === 2)
+            console.log("Notifying second player its their turn...");
+            this.clients[room.second - 1].ws.send(JSON.stringify(turnData));
+          }
+          if(parsed.teamId === 2) {
             room.currTeam = 1;
+            console.log("Notifying host player its their turn...");
+            this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
+          }
 
           if(room.host !== 0)
-            this.clients[room.host - 1].ws.send(JSON.stringify(parsed));
+            this.clients[room.host - 1].ws.send(message);
           if(room.second !== 0)
-            this.clients[room.second - 1].ws.send(JSON.stringify(parsed));
+            this.clients[room.second - 1].ws.send(message);
+
         }
       });
 
@@ -142,6 +154,17 @@ class Server {
         }
       });
     });
+  }
+
+  sendBoardTo(roomId, peerId) {
+    const currRoom = server.rooms.get(roomId);
+    let pieces = [];
+    currRoom.board.pieces.forEach(value => {
+      pieces.push(JSON.stringify(value));
+    });
+    let boardState = { id: 4, board: JSON.stringify(currRoom.board), pieces: pieces };
+    this.clients[peerId - 1].ws.send(JSON.stringify(boardState));
+    console.log("Sending board state...");
   }
 
   sendAll(message) {

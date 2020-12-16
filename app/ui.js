@@ -30,8 +30,8 @@ make_move
   pieceId:
   moveX:
   moveY:
-  peerId
-  teamId
+  peerId:
+  jump:
 }
 
 server->client
@@ -41,6 +41,12 @@ send_board
   board
   pieces
   currTeam
+}
+
+server->client
+your_turn
+{
+  id: 5
 }
 */
 
@@ -64,7 +70,7 @@ class UI {
     const row = element.row;
     const col = element.col;
     let clickedPieceId = this.board.data[row][col];
-    console.log("ValidPieces: " + this.board.getValidPieces(this.teamId));
+    //console.log("ValidPieces: " + this.board.getValidPieces(this.teamId));
     console.log("Selected piece " + clickedPieceId);
     if(clickedPieceId && this.board.pieces.get(clickedPieceId).team !== this.teamId)
       clickedPieceId = 0;
@@ -72,16 +78,31 @@ class UI {
     if(!this.waiting) {
       if (this.selectedPieceId) {
         if (!clickedPieceId) {
-          const moves = this.board.getValidMoves(this.selectedPieceId);
-          let isValid = false;
-          for (const move of moves) {
+          const singleMoves = this.board.getMoves(this.selectedPieceId, 1);
+          const jumpMoves = this.board.getMoves(this.selectedPieceId, 2);
+          let isSingle = false, isJump = false;
+          for (const move of singleMoves) {
             if (move[0] === col && move[1] === row) {
-              isValid = true;
+              console.log("found single move");
+              isSingle = true;
               break;
             }
           }
-          if (isValid) {
-            this.client.sendMove("test", this.selectedPieceId, col, row);
+          if(!isSingle) {
+            for (const move of jumpMoves) {
+              if (move[0] === col && move[1] === row) {
+                console.log("found jump move");
+                isJump = true;
+                break;
+              }
+            }
+          }
+          if (isSingle || isJump) {
+            if(isJump)
+              console.log("sending jump...");
+            else
+              console.log("sending single...")
+            this.client.sendMove("test", this.selectedPieceId, col, row, isJump);
             this.waiting = true;
           }
         }
@@ -190,6 +211,12 @@ class UI {
     console.log("Moving piece " + pieceId)
     const piece = this.board.pieces.get(pieceId);
     this.clearPosition(piece.col, piece.row);
+    const jumped = this.board.getJumpedPiece([piece.col, piece.row], [col, row]);
+    if(jumped) {
+      const jumpedPiece = this.board.pieces.get(jumped);
+      this.clearPosition(jumpedPiece.col, jumpedPiece.row);
+    }
+
     this.board.movePiece(pieceId, col, row);
     //update gfx
     this.drawPiece(col, row, piece.team, piece.king);
