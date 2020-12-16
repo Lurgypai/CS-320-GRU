@@ -114,6 +114,14 @@
     <div id="player2_turn"> Waiting</div>
   </div>
 </div>
+<div id="game_over_buttons" style="width: 100%; margin-top: 600px; position: absolute; display: none">
+  <div class="ui button" onclick="restartGame()">
+    Play Again
+  </div>
+  <div class="ui button" onclick="location.href = 'play_game.html'">
+    Main Menu
+  </div>
+</div>
 <canvas id="board" width="800" height="800" style="display: none; margin: 0 auto; margin-top: 35px"/>
 <br>
 
@@ -151,6 +159,12 @@
     board.style.display="block";
     let playerNames = document.getElementById("player_names");
     playerNames.style.display="block";
+    let game_over = document.getElementById("game_over_buttons");
+    game_over.style.display="block";
+  }
+
+  function restartGame() {
+    // add restart game function here
   }
 </script>
 </html>
