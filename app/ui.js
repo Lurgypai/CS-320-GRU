@@ -64,6 +64,7 @@ class UI {
     const row = element.row;
     const col = element.col;
     let clickedPieceId = this.board.data[row][col];
+    console.log("ValidPieces: " + this.board.getValidPieces(this.teamId));
     console.log("Selected piece " + clickedPieceId);
     if(clickedPieceId && this.board.pieces.get(clickedPieceId).team !== this.teamId)
       clickedPieceId = 0;

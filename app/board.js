@@ -216,6 +216,19 @@ class Board
     return ret;
   }
 
+  getValidPieces(teamId) {
+
+    let validPieces = [];
+
+    this.pieces.forEach(function(currPiece) {
+      console.log("Currpiece team: " + currPiece.team + " teamId: " + teamId);
+      if (currPiece.team === teamId && this.getValidMoves(currPiece).length !== 0) {
+        validPieces.push();
+      }
+    });
+    return validPieces;
+  }
+
   validMove(pieceId, newX, newY)
   {
     if(this.pieces.has(pieceId)) {
