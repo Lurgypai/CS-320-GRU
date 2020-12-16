@@ -209,8 +209,17 @@ class Board
         let newPos = [offset[0] + currPos[0], offset[1] + currPos[1]];
         if(newPos[0] >= 0 && newPos[0] < this.width && newPos[1] >= 0 && newPos[1] < this.height) {
           if(!this.data[newPos[1]][newPos[0]]) {
-            if(distance === 1 || this.getJumpedPiece(currPos, [newPos[0], newPos[1]]))
+            const jumpedId = this.getJumpedPiece(currPos, [newPos[0], newPos[1]]);
+
+            if(distance === 1) {
               validMoves.push(newPos);
+            }
+            else if(jumpedId) {
+              const jumpedPiece = this.pieces.get(jumpedId);
+              if(jumpedPiece.team !== piece.team) {
+                validMoves.push(newPos);
+              }
+            }
           }
         }
       }

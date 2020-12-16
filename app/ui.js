@@ -64,6 +64,7 @@ class UI {
     this.waiting = true;
     this.jumping = false;
     this.teamId = 0;
+    this.highlightedCells = [];
 
     this.board.printBoard();
   }
@@ -109,8 +110,10 @@ class UI {
           }
         }
       }
-      if (clickedPieceId && !this.jumping)
+      if (clickedPieceId && !this.jumping) {
         this.selectedPieceId = clickedPieceId;
+        this.highlightAvailableMoves();
+      }
     }
   }
 
@@ -231,7 +234,40 @@ class UI {
     this.displayImg(200, 200, "you_dont_win.png");
   }
 
+  highlightAvailableMoves() {
+    this.clearHighlighting();
+    const singleMoves = this.board.getMoves(this.selectedPieceId, 1);
+    const jumpMoves = this.board.getMoves(this.selectedPieceId, 2);
+
+    for(const move of singleMoves) {
+      this.displayImg(100 * move[0], 100 * move[1], "highlight_piece.png");
+      this.highlightedCells.push(move);
+    }
+    for(const move of jumpMoves) {
+      this.displayImg(100 * move[0], 100 * move[1], "highlight_piece.png");
+      this.highlightedCells.push(move);
+    }
+  }
+
+  clearHighlighting() {
+    for(const cell of this.highlightedCells) {
+      this.clearPosition(cell[0], cell[1]);
+    }
+    this.highlightedCells = [];
+  }
+
+
+  displayTurn() {
+    alert("your turn!")
+  }
+
+  clearTurnDisplay() {
+  }
+
   makeMove(pieceId, col, row) {
+
+    this.clearHighlighting();
+
     console.log("Moving piece " + pieceId)
     const piece = this.board.pieces.get(pieceId);
     this.clearPosition(piece.col, piece.row);
@@ -246,6 +282,7 @@ class UI {
     this.drawPiece(col, row, piece.team, piece.king);
 
     if(this.jumping) {
+      this.highlightAvailableMoves();
       if(!this.board.getMoves(this.selectedPieceId, 2).length) {
         this.jumping = false;
         this.selectedPieceId = 0;

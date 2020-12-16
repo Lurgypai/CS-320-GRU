@@ -59,6 +59,7 @@ class GameClient {
     }
     if(parsed.id === 5) {
       console.log("Received turn notification")
+      this.ui.displayTurn();
       this.ui.waiting = false;
     }
   }
