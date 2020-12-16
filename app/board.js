@@ -1,26 +1,8 @@
-//stores a 2d coordinate
-class Pos {
-  constructor(x_, y_) {
-    this.x = x_;
-    this.y = y_;
-  }
-}
-
-//stores an id, and what piece they currently want to move
-class Player {
-  constructor(id_) {
-    this.id = id_;
-    this.targetPiece = new Pos(-1, -1);
-    this.targetMove = new Pos(-1, -1);
-  }
-}
-
 class Piece {
   constructor(id_, team_) {
     this.id = id_;
     this.king = false;
     this.team = team_;
-    this.alive = false;
     this.col = 0;
     this.row = 0;
   }
@@ -81,8 +63,8 @@ class Board
   //remove all pieces
   clearBoard()
   {
-    for (var i = 0; i != this.height; ++i) {
-      for (var j = 0; j != this.width; ++j) {
+    for (let i = 0; i !== this.height; ++i) {
+      for (let j = 0; j !== this.width; ++j) {
         this.data[i][j] = 0;
       }
     }
@@ -92,28 +74,28 @@ class Board
 
   debugBoard() {
     this.clearBoard();
-    var currId = 0;
+    let currId = 0;
 
-    var currPieceId = 0;
-    for (var i = 0; i !== this.pieceCount / 2; ++i) {
+    let currPieceId = 0;
+    for (let i = 0; i !== this.pieceCount / 2; ++i) {
       this.pieces.set(++currPieceId, new Piece(currPieceId, 1));
     }
 
-    for (var pair of this.pieces) {
+    for (let pair of this.pieces) {
       pair[1].alive = true;
       pair[1].king = false;
     }
 
-    for (var i = 0; i != this.height; ++i) {
-      for (var j = 0; j != this.width; ++j) {
+    for (var i = 0; i !== this.height; ++i) {
+      for (var j = 0; j !== this.width; ++j) {
 
         //start with white, every other row fill every other piece
-        if (i % 2 == 0 && j % 2 == 1 && i < 3) {
+        if (i % 2 === 0 && j % 2 === 1 && i < 3) {
           this.data[i][j] = ++currId;
           this.pieces.get(currId).col = j;
           this.pieces.get(currId).row = i;
         } else
-          if (i % 2 == 1 && j % 2 == 0 && i < 3) {
+          if (i % 2 === 1 && j % 2 === 0 && i < 3) {
             this.data[i][j] = ++currId;
             this.pieces.get(currId).col = j;
             this.pieces.get(currId).row = i;
@@ -131,42 +113,42 @@ class Board
   {
     this.clearBoard();
 
-    var currPieceId = 0;
-    for (var i = 0; i !== this.pieceCount / 2; ++i) {
+    let currPieceId = 0;
+    for (let i = 0; i !== this.pieceCount / 2; ++i) {
       this.pieces.set(++currPieceId, new Piece(currPieceId, 1));
     }
-    for (var i = 0; i !== this.pieceCount / 2; ++i) {
+    for (let i = 0; i !== this.pieceCount / 2; ++i) {
       this.pieces.set(++currPieceId, new Piece(currPieceId, 2));
     }
 
-    var currId = 0;
+    let currId = 0;
 
-    for (var pair of this.pieces) {
+    for (let pair of this.pieces) {
       pair[1].alive = true;
       pair[1].king = false;
     }
 
-    for (var i = 0; i != this.height; ++i) {
-      for (var j = 0; j != this.width; ++j) {
+    for (let i = 0; i !== this.height; ++i) {
+      for (let j = 0; j !== this.width; ++j) {
 
         //start with white, every other row fill every other piece
-        if (i % 2 == 0 && j % 2 == 1 && i < 3) {
+        if (i % 2 === 0 && j % 2 === 1 && i < 3) {
           this.data[i][j] = ++currId;
           this.pieces.get(currId).col = j;
           this.pieces.get(currId).row = i;
         } else
-          if (i % 2 == 1 && j % 2 == 0 && i < 3) {
+          if (i % 2 === 1 && j % 2 === 0 && i < 3) {
             this.data[i][j] = ++currId;
             this.pieces.get(currId).col = j;
             this.pieces.get(currId).row = i;
           }
         //black, the same, but lower
-        if (i % 2 == 0 && j % 2 == 1 && i >= 5) {
+        if (i % 2 === 0 && j % 2 === 1 && i >= 5) {
           this.data[i][j] = ++currId;
           this.pieces.get(currId).col = j;
           this.pieces.get(currId).row = i;
         } else
-          if (i % 2 == 1 && j % 2 == 0 && i >= 5) {
+          if (i % 2 === 1 && j % 2 === 0 && i >= 5) {
             this.data[i][j] = ++currId;
             this.pieces.get(currId).col = j;
             this.pieces.get(currId).row = i;
@@ -183,7 +165,7 @@ class Board
       //get valid moves based off of team
       let offsets = [];
       if(!piece.king) {
-        let direction = 0;
+        let direction;
         if(piece.team === 1) {
           direction = 1;
         } else {
@@ -296,4 +278,5 @@ class Board
     return pieceDeleted;
   }
 }
+//node js. Throws unimportant errors when hosting
 module.exports = {Board};

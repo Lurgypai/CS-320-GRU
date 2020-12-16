@@ -149,13 +149,17 @@ class Server {
         }
 
         for(const freeId of this.freeClients) {
+          console.log("Handling freed client " + freeId);
           this.clients[freeId - 1].name = "None";
           this.rooms.forEach(value => {
             console.log("Checking room " + value.id);
+            console.log("Current host " + value.host);
+            console.log("Current second " + value.second);
+
             //clear whoever disconnected from their room
             if(value.host === freeId) {
               value.host = 0;
-              console.log("Host of room " + value.id + " exited");
+              console.log("Host of room " + value.id + " with id exited");
               this.notifyRoomOfNames(value.id)
             }
             if(value.second === freeId) {
@@ -197,12 +201,6 @@ class Server {
     let boardState = { id: 4, board: JSON.stringify(currRoom.board), pieces: pieces };
     this.clients[peerId - 1].ws.send(JSON.stringify(boardState));
     console.log("Sending board state...");
-  }
-
-  sendAll(message) {
-    for(const client of this.clients) {
-      client.ws.send(message);
-    }
   }
 
   notifyRoomOfNames(roomId) {
