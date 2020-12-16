@@ -120,12 +120,12 @@ class UI {
     const board = this.board;
     const UI = this;
     const elements = this.elements;
-    const canvasLeft = this.canvasLeft;
-    const canvasTop = this.canvasTop;
+    const boardCanvas = this.boardCanvas;
 
     this.boardCanvas.addEventListener('click', function (event) {
-      let x = event.pageX - canvasLeft,
-          y = event.pageY - canvasTop;
+      const coords = boardCanvas.relMouseCoords(event);
+      let x = coords.x,
+          y = coords.y;
 
       // Collision detection between clicked offset and element.
       elements.forEach(function (element) {
@@ -215,6 +215,22 @@ class UI {
     this.canvasContext.fillRect(element.left, element.top, element.width, element.height);
   }
 
+  displayImg(pixX, pixY, src) {
+    let img = new Image();
+    img.onload = () => {
+      this.canvasContext.drawImage(img, pixX, pixY);
+    }
+    img.src = src;
+  }
+
+  displayWin() {
+    this.displayImg(200, 200, "you_win.png");
+  }
+
+  displayLoss() {
+    this.displayImg(200, 200, "you_dont_win.png");
+  }
+
   makeMove(pieceId, col, row) {
     console.log("Moving piece " + pieceId)
     const piece = this.board.pieces.get(pieceId);
@@ -238,8 +254,6 @@ class UI {
 
     //this is really important do not delete
     let toerhTeam = 1;
-    if(this.teamId === 1)
-      toerhTeam = 2;
 
     let team1Pieces = this.board.getValidPieces(1).length;
     let team2Pieces = this.board.getValidPieces(2).length;
@@ -248,15 +262,14 @@ class UI {
 
     if(!team2Pieces) {
       if(this.teamId === 1)
-        alert("you won")
+        this.displayWin();
       else
-        alert("you are a failure")
+        this.displayLoss();
     } else if (!team1Pieces) {
       if(this.teamId === 2)
-        alert("you won")
+        this.displayWin();
       else
-        alert("you are a big failure")
+        this.displayLoss();
     }
-
   }
 }
