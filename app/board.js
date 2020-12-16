@@ -44,14 +44,6 @@ class Board
       }
       this.data.push(row);
     }
-
-    var currPieceId = 0;
-    for (var i = 0; i !== this.pieceCount / 2; ++i) {
-      this.pieces.set(++currPieceId, new Piece(currPieceId, 1));
-    }
-    for (var i = 0; i !== this.pieceCount / 2; ++i) {
-      this.pieces.set(++currPieceId, new Piece(currPieceId, 2));
-    }
   }
 
   //draw the board as text (for debugging)
@@ -94,12 +86,59 @@ class Board
         this.data[i][j] = 0;
       }
     }
+
+    this.pieces.clear();
+  }
+
+  debugBoard() {
+    this.clearBoard();
+    var currId = 0;
+
+    var currPieceId = 0;
+    for (var i = 0; i !== this.pieceCount / 2; ++i) {
+      this.pieces.set(++currPieceId, new Piece(currPieceId, 1));
+    }
+
+    for (var pair of this.pieces) {
+      pair[1].alive = true;
+      pair[1].king = false;
+    }
+
+    for (var i = 0; i != this.height; ++i) {
+      for (var j = 0; j != this.width; ++j) {
+
+        //start with white, every other row fill every other piece
+        if (i % 2 == 0 && j % 2 == 1 && i < 3) {
+          this.data[i][j] = ++currId;
+          this.pieces.get(currId).col = j;
+          this.pieces.get(currId).row = i;
+        } else
+          if (i % 2 == 1 && j % 2 == 0 && i < 3) {
+            this.data[i][j] = ++currId;
+            this.pieces.get(currId).col = j;
+            this.pieces.get(currId).row = i;
+          }
+      }
+    }
+    this.data[5][2] = ++currId;
+    this.pieces.set(currId, new Piece(currId, 2));
+    this.pieces.get(currId).row = 5;
+    this.pieces.get(currId).col = 2;
   }
 
   //clear and fill with pieces
   fillBoard()
   {
     this.clearBoard();
+
+    var currPieceId = 0;
+    for (var i = 0; i !== this.pieceCount / 2; ++i) {
+      this.pieces.set(++currPieceId, new Piece(currPieceId, 1));
+    }
+    for (var i = 0; i !== this.pieceCount / 2; ++i) {
+      this.pieces.set(++currPieceId, new Piece(currPieceId, 2));
+    }
+
     var currId = 0;
 
     for (var pair of this.pieces) {
@@ -170,7 +209,8 @@ class Board
         let newPos = [offset[0] + currPos[0], offset[1] + currPos[1]];
         if(newPos[0] >= 0 && newPos[0] < this.width && newPos[1] >= 0 && newPos[1] < this.height) {
           if(!this.data[newPos[1]][newPos[0]]) {
-            validMoves.push(newPos);
+            if(distance === 1 || this.getJumpedPiece(currPos, [newPos[0], newPos[1]]))
+              validMoves.push(newPos);
           }
         }
       }
@@ -210,25 +250,31 @@ class Board
       const targetPiece = this.pieces.get(pieceId);
       this.data[targetPiece.row][targetPiece.col] = 0;
       this.pieces.delete(pieceId);
+      return true;
     }
+    return false;
   }
 
   getValidPieces(teamId) {
     let validPieces = [];
 
-    this.pieces.forEach(currPiece => {
-      console.log("Currpiece team: " + currPiece.team + " teamId: " + teamId);
-      if (currPiece.team === teamId && this.getMoves(currPiece, 1).length !== 0, this.getMoves(currPiece, 2).length !== 0) {
-        validPieces.push();
+    this.pieces.forEach(value => {
+      //console.log("Currpiece team: " + value.team + " teamId: " + teamId);
+      let singleMoveCount = this.getMoves(value.id, 1).length;
+      let jumpMoveCount = this.getMoves(value.id, 2).length;
+
+      if (value.team === teamId && (singleMoveCount || jumpMoveCount)) {
+        validPieces.push(value.pieceId);
       }
     });
+
     return validPieces;
   }
 
   movePiece(pieceId, newX, newY) {
     const piece = this.pieces.get(pieceId);
 
-    this.doJump([piece.col, piece.row], [newX, newY]);
+    const pieceDeleted = this.doJump([piece.col, piece.row], [newX, newY]);
 
     this.data[piece.row][piece.col] = 0;
     piece.row = newY;
@@ -238,6 +284,7 @@ class Board
     if((piece.team === 1 && newY === this.height - 1) || (piece.team === 2 && newY === 0)) {
       piece.king = true;
     }
+    return pieceDeleted;
   }
 }
 module.exports = {Board};

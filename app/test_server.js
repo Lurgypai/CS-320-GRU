@@ -100,21 +100,27 @@ class Server {
         }
         if(parsed.id === 2) {
           const room = server.rooms.get(parsed.roomId);
-          room.board.movePiece(parsed.pieceId, parsed.x, parsed.y);
+          const jumpedPiece = room.board.movePiece(parsed.pieceId, parsed.x, parsed.y)
 
           parsed["teamId"] = room.currTeam;
 
           let turnData = {id:5};
+          const canJump = room.board.getMoves(parsed.pieceId, 2).length;
 
-          if(parsed.teamId === 1) {
-            room.currTeam = 2;
-            console.log("Notifying second player its their turn...");
-            this.clients[room.second - 1].ws.send(JSON.stringify(turnData));
-          }
-          if(parsed.teamId === 2) {
-            room.currTeam = 1;
-            console.log("Notifying host player its their turn...");
-            this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
+          if(!jumpedPiece || !canJump) {
+            if (parsed.teamId === 1) {
+              room.currTeam = 2;
+              console.log("Notifying second player its their turn...");
+              this.clients[room.second - 1].ws.send(JSON.stringify(turnData));
+            }
+            if (parsed.teamId === 2) {
+              room.currTeam = 1;
+              console.log("Notifying host player its their turn...");
+              this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
+            }
+          } else if (canJump) {
+            console.log("Notifying player they can keep jumping...");
+            this.clients[parsed.peerId - 1].ws.send(JSON.stringify(turnData));
           }
 
           if(room.host !== 0)
