@@ -30,6 +30,7 @@ class Connection {
   constructor(ws, id) {
     this.ws = ws;
     this.id = id;
+    this.name = "";
   }
 }
 
@@ -76,13 +77,7 @@ class Server {
               console.log("Joining: " + parsed.peerId + " to " + parsed.roomId + " as player " + team);
               parsed["team"] = team;
 
-              console.log("Notifying player its their turn...");
-              let turnData = {id:5};
-              if(currRoom.currTeam === 1) {
-                this.clients[currRoom.host - 1].ws.send(JSON.stringify(turnData));
-              } else if (currRoom.currTeam === 2) {
-                this.clients[currRoom.second - 1].ws.send(JSON.stringify(turnData));
-              }
+              this.notifyRoomOfTurn(parsed.roomId);
             }
           } else {
             joined = true;
@@ -104,30 +99,31 @@ class Server {
 
           parsed["teamId"] = room.currTeam;
 
-          let turnData = {id:5};
           const canJump = room.board.getMoves(parsed.pieceId, 2).length;
 
           if(!jumpedPiece || !canJump) {
             if (parsed.teamId === 1) {
               room.currTeam = 2;
-              console.log("Notifying second player its their turn...");
-              this.clients[room.second - 1].ws.send(JSON.stringify(turnData));
             }
             if (parsed.teamId === 2) {
               room.currTeam = 1;
-              console.log("Notifying host player its their turn...");
-              this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
             }
-          } else if (canJump) {
-            console.log("Notifying player they can keep jumping...");
-            this.clients[parsed.peerId - 1].ws.send(JSON.stringify(turnData));
           }
 
-          if(room.host !== 0)
-            this.clients[room.host - 1].ws.send(message);
-          if(room.second !== 0)
-            this.clients[room.second - 1].ws.send(message);
+          this.notifyRoomOfTurn(parsed.roomId);
 
+          if(room.host !== 0) {
+            console.log("sending move data and turn data to host");
+            this.clients[room.host - 1].ws.send(message);
+          }
+          if(room.second !== 0) {
+            console.log("sending move data and turn data to second");
+            this.clients[room.second - 1].ws.send(message);
+          }
+
+        }
+        if(parsed.id === 0) {
+          this.clients[parsed.peerId - 1].name = parsed.name;
         }
       });
 
@@ -160,6 +156,21 @@ class Server {
         }
       });
     });
+  }
+
+  notifyRoomOfTurn(roomId) {
+    const room = this.rooms.get(roomId);
+    const currClientId = room.currTeam === 1 ? room.host : room.second;
+    const currClient = this.clients[currClientId-1];
+    const turnData = {id: 5, team:room.currTeam, name:currClient.name};
+    if(room.host !== 0) {
+      console.log("sending turn data to host");
+      this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
+    }
+    if(room.second !== 0) {
+      console.log("sending turn data to second");
+      this.clients[room.second - 1].ws.send(JSON.stringify(turnData));
+    }
   }
 
   sendBoardTo(roomId, peerId) {

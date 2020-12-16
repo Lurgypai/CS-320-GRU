@@ -45,9 +45,11 @@ send_board
 }
 
 server->client
-your_turn
+turn_data
 {
   id: 5
+  team:
+  name:
 }
 */
 
@@ -257,8 +259,8 @@ class UI {
   }
 
 
-  displayTurn() {
-    alert("your turn!")
+  displayTurn(name) {
+    alert(name + "its your turn!")
   }
 
   clearTurnDisplay() {

@@ -5,6 +5,7 @@ class GameClient {
     this.peerId = 0;
     this.roomId = "";
     this.ui = ui;
+    this.name = "fred";
 
     this.connection.onopen = () => {
     }
@@ -14,6 +15,9 @@ class GameClient {
       console.log(parsed);
       if(parsed.id === 1) {
         this.peerId = parsed.peerId;
+
+        const connect = {peerId:this.peerId,id:0,name:this.name }
+        this.connection.send(JSON.stringify(connect));
 
         let roomRequest = {peerId: this.peerId, id: 3, roomId: this.roomId};
         this.connection.send(JSON.stringify(roomRequest));
@@ -58,9 +62,11 @@ class GameClient {
       this.ui.makeMove(parsed.pieceId, parsed.x, parsed.y);
     }
     if(parsed.id === 5) {
-      console.log("Received turn notification")
-      this.ui.displayTurn();
-      this.ui.waiting = false;
+      if(parsed.team === this.ui.teamId) {
+        console.log("Received turn notification")
+        this.ui.displayTurn(parsed.name);
+        this.ui.waiting = false;
+      }
     }
   }
 }
