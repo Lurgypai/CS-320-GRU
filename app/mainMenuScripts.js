@@ -1,12 +1,3 @@
-function playGameOptions(singpleyaer) {
-
-    let menu_div = document.getElementById("main_menu_div");
-    let game_option_div = document.getElementById("game_options_div");
-
-    menu_div.style.display = "none";
-    game_option_div.style.display = "block";
-}
-
 function validName() {
 
     let name_div= document.getElementById("enter_name_div");
@@ -19,19 +10,6 @@ function validName() {
         menu_div.style.display = "block";
         welcomeTxt.innerHTML += `Welcome, ${nameTxt.value}!`
     }
-}
-
-function returnToMenu() {
-
-    let menu_div = document.getElementById("main_menu_div");
-    let game_option_div = document.getElementById("game_options_div");
-
-    menu_div.style.display = "block";
-    game_option_div.style.display = "none";
-}
-
-function startSingleplayer() {
-  console.log("hello");
 }
 
 function twoPlayerOptions() {
