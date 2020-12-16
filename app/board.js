@@ -137,7 +137,7 @@ class Board
   }
 
   //TODO: rename to getSingleMoves, fix getJumpMoves
-  getValidMoves(pieceId) {
+  getMoves(pieceId, distance) {
     let validMoves = [];
     if(this.pieces.has(pieceId)) {
       const piece = this.pieces.get(pieceId);
@@ -160,6 +160,8 @@ class Board
         offsets.push([1, 1]);
       }
 
+      offsets.forEach(value => {value.forEach( coord => {coord *= distance})});
+
       let currPos = [piece.col, piece.row];
       for(const offset of offsets) {
         let newPos = [offset[0] + currPos[0], offset[1] + currPos[1]];
@@ -174,6 +176,10 @@ class Board
       //validMoves = validMoves.concat(jumpMoves);
     }
     return validMoves;
+  }
+
+  getJumpMoves(pieceId) {
+
   }
 
   getJumpMoves(direction, currPos, teamId) {
@@ -222,7 +228,7 @@ class Board
 
     this.pieces.forEach(currPiece => {
       console.log("Currpiece team: " + currPiece.team + " teamId: " + teamId);
-      if (currPiece.team === teamId && this.getValidMoves(currPiece).length !== 0) {
+      if (currPiece.team === teamId && this.getMoves(currPiece, 1).length !== 0, this.getMoves(currPiece, 2).length !== 0) {
         validPieces.push();
       }
     });

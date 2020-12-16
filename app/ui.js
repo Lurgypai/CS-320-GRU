@@ -78,9 +78,10 @@ class UI {
     if(!this.waiting) {
       if (this.selectedPieceId) {
         if (!clickedPieceId) {
-          const moves = this.board.getValidMoves(this.selectedPieceId);
+          const singleMoves = this.board.getMoves(this.selectedPieceId, 1);
+          const jumpMoves = this.board.getMoves(this.selectedPieceId, 2);
           let isValid = false;
-          for (const move of moves) {
+          for (const move of singleMoves) {
             if (move[0] === col && move[1] === row) {
               isValid = true;
               break;
