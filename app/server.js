@@ -67,32 +67,26 @@ class Server {
         console.log("received message: " + message);
         //room join request
         if(parsed.id === 3) {
-          let joined = false;
 
           if(server.rooms.has(parsed.roomId)) {
             const currRoom = server.rooms.get(parsed.roomId);
             const team = currRoom.joinPlayer(parsed.peerId);
             if(team) {
-              joined = true;
               console.log("Joining: " + parsed.peerId + " to " + parsed.roomId + " as player " + team);
               parsed["team"] = team;
-
-              this.notifyRoomOfTurn(parsed.roomId);
-              this.notifyRoomOfNames(parsed.roomId);
             }
-          } else {
-            joined = true;
+          }
+          else {
             server.rooms.set(parsed.roomId, new Room(parsed.roomId, parsed.peerId));
             server.rooms.get(parsed.roomId).board.fillBoard();
             console.log("Creating room " + parsed.roomId + " with host " + parsed.peerId);
             parsed["team"] = 1;
           }
-          if(joined) {
-            const currRoom = server.rooms.get(parsed.roomId);
-            //convert it back and send (team field added)
-            this.clients[parsed.peerId - 1].ws.send(JSON.stringify(parsed));
-            this.sendBoardTo(parsed.roomId, parsed.peerId);
-          }
+
+          this.clients[parsed.peerId - 1].ws.send(JSON.stringify(parsed));
+          this.sendBoardTo(parsed.roomId, parsed.peerId);
+          this.notifyRoomOfNames(parsed.roomId);
+          this.notifyRoomOfTurn(parsed.roomId);
         }
         if(parsed.id === 2) {
           const room = server.rooms.get(parsed.roomId);
@@ -125,6 +119,13 @@ class Server {
         }
         if(parsed.id === 0) {
           this.clients[parsed.peerId - 1].name = parsed.name;
+        }
+        if(parsed.id === 7) {
+          const room = this.rooms.get(parsed.roomId);
+          room.board.fillBoard();
+          this.sendBoardTo(parsed.roomId, room.host);
+          this.sendBoardTo(parsed.roomId, room.second);
+          this.notifyRoomOfTurn(parsed.roomId);
         }
       });
 

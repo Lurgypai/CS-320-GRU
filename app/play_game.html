@@ -146,7 +146,7 @@
     document.getElementById("room_code").innerHTML = "Room Code: " + code.value;
     let ui = new UI();
     ui.client.roomId = code.value;
-    ui.client.name = name.value;
+    ui.client.name = name.value.substr(0, 7);
     let menu = document.getElementById("menu");
     menu.style.display="none";
     let board = document.getElementById("board");

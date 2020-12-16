@@ -57,6 +57,11 @@ name_data
   name1
   name2
 }
+reset
+{
+  id:7;
+  roomId:
+}
 */
 
 class UI {
