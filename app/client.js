@@ -63,7 +63,7 @@ class GameClient {
     }
     if(parsed.id === 5) {
       console.log("Received turn notification")
-      this.ui.displayTurn(parsed.name, parsed.team);
+      this.ui.displayTurn(parsed.team);
       if(parsed.team === this.ui.teamId) {
         console.log("Our turn");
         this.ui.waiting = false;

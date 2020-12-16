@@ -249,14 +249,22 @@ class UI {
 
   highlightAvailableMoves() {
     this.clearHighlighting();
-    const singleMoves = this.board.getMoves(this.selectedPieceId, 1);
-    const jumpMoves = this.board.getMoves(this.selectedPieceId, 2);
 
-    for(const move of singleMoves) {
+    this.highlightSingles();
+    this.highlightJumps();
+  }
+
+  highlightJumps() {
+    const jumpMoves = this.board.getMoves(this.selectedPieceId, 2);
+    for(const move of jumpMoves) {
       this.displayImg(100 * move[0], 100 * move[1], "highlight_piece.png");
       this.highlightedCells.push(move);
     }
-    for(const move of jumpMoves) {
+  }
+
+  highlightSingles() {
+    const singleMoves = this.board.getMoves(this.selectedPieceId, 1);
+    for(const move of singleMoves) {
       this.displayImg(100 * move[0], 100 * move[1], "highlight_piece.png");
       this.highlightedCells.push(move);
     }
@@ -275,7 +283,7 @@ class UI {
     document.getElementById("player2_name").innerHTML = name2;
   }
 
-  displayTurn(name, teamId) {
+  displayTurn(teamId) {
     if(teamId === 1) {
       document.getElementById("player1_turn").innerHTML = "Your Turn!";
       document.getElementById("player2_turn").innerHTML = "Waiting...";
@@ -308,7 +316,7 @@ class UI {
         this.jumping = false;
         this.selectedPieceId = 0;
       } else {
-        this.highlightAvailableMoves();
+        this.highlightJumps();
       }
     }
 

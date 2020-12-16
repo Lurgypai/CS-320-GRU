@@ -68,27 +68,37 @@ class Server {
         //room join request
         if(parsed.id === 3) {
 
+          let roomFull = false;
+          let joined = false;
+
           if(server.rooms.has(parsed.roomId)) {
             const currRoom = server.rooms.get(parsed.roomId);
             const team = currRoom.joinPlayer(parsed.peerId);
             if(team) {
               console.log("Joining: " + parsed.peerId + " to " + parsed.roomId + " as player " + team);
               parsed["team"] = team;
+
+              roomFull = true;
+              joined = true;
             }
           }
           else {
+            joined = true;
             server.rooms.set(parsed.roomId, new Room(parsed.roomId, parsed.peerId));
             server.rooms.get(parsed.roomId).board.fillBoard();
             console.log("Creating room " + parsed.roomId + " with host " + parsed.peerId);
             parsed["team"] = 1;
           }
-
-          this.clients[parsed.peerId - 1].ws.send(JSON.stringify(parsed));
-          this.sendBoardTo(parsed.roomId, parsed.peerId);
-          this.notifyRoomOfNames(parsed.roomId);
-          this.notifyRoomOfTurn(parsed.roomId);
+          if(joined) {
+            this.clients[parsed.peerId - 1].ws.send(JSON.stringify(parsed));
+            this.sendBoardTo(parsed.roomId, parsed.peerId);
+            this.notifyRoomOfNames(parsed.roomId);
+            if(roomFull) {
+              this.notifyRoomOfTurn(parsed.roomId);
+            }
+          }
         }
-        if(parsed.id === 2) {
+        else if(parsed.id === 2) {
           const room = server.rooms.get(parsed.roomId);
           const jumpedPiece = room.board.movePiece(parsed.pieceId, parsed.x, parsed.y)
 
@@ -117,10 +127,10 @@ class Server {
           }
 
         }
-        if(parsed.id === 0) {
+        else if(parsed.id === 0) {
           this.clients[parsed.peerId - 1].name = parsed.name;
         }
-        if(parsed.id === 7) {
+        else if(parsed.id === 7) {
           const room = this.rooms.get(parsed.roomId);
           room.board.fillBoard();
           this.sendBoardTo(parsed.roomId, room.host);
@@ -132,12 +142,14 @@ class Server {
       ws.on('close', e => {
         for(let i = 0; i !== this.clients.length; ++i) {
           const connection = this.clients[i];
-          if(connection.ws.readyState === SocketLib.CLOSING || connection.ws.readyState === SocketLib.CLOSED) {
+          if(connection.ws.readyState === SocketLib.CLOSED) {
             console.log("Client " + (i + 1) + " disconnected, marking as free");
             this.freeClients.push(i + 1);
           }
         }
+
         for(const freeId of this.freeClients) {
+          this.clients[freeId - 1].name = "None";
           this.rooms.forEach(value => {
             console.log("Checking room " + value.id);
             //clear whoever disconnected from their room
@@ -164,9 +176,8 @@ class Server {
 
   notifyRoomOfTurn(roomId) {
     const room = this.rooms.get(roomId);
-    const currClientId = room.currTeam === 1 ? room.host : room.second;
-    const currClient = this.clients[currClientId-1];
-    const turnData = {id: 5, team:room.currTeam, name:currClient.name};
+    console.log("sending turn " + room.currTeam);
+    const turnData = {id: 5, team:room.currTeam};
     if(room.host !== 0) {
       console.log("sending turn data to host");
       this.clients[room.host - 1].ws.send(JSON.stringify(turnData));
@@ -214,47 +225,15 @@ class Server {
 
     const roomData = {id: 6, name1:name1, name2:name2};
     if(hasHost) {
-      console.log("sending turn data to host");
+      console.log("sending name data to host");
       this.clients[room.host - 1].ws.send(JSON.stringify(roomData));
     }
 
     if(hasSecond) {
-      console.log("sending turn data to second");
+      console.log("sending name data to second");
       this.clients[room.second - 1].ws.send(JSON.stringify(roomData));
     }
   }
 }
-
-class Game {
-  constructor() {
-    this.board = new lib.Board();
-    // this.players = [new Player(1), new Player(2)];
-    this.curPlayer = 1;
-  }
-
-  startGame() {
-    this.board.fillBoard();
-    this.board.printBoard();
-    this.runGame();
-  }
-
-  resetGame() {
-    //reset game state (in board class) or not needed?
-    this.board.clearBoard();
-    this.startGame(); //Do we have to worry about calling runGame while a game is already in progress?
-    //or should we just perform "this.board.fillBoard();"?
-  }
-
-  cancelGame() {
-    //Stop interactions with the board and boot players to landing page?
-    //Or stop players from using anything other than the menu?
-  }
-
-  switchPlayer() {
-    this.curPlayer = (this.curPlayer % 2) + 1;
-  }
-
-}
-
 
 var server = new Server();
