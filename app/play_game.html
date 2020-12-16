@@ -72,8 +72,7 @@
   </li>
 </ul>
 
-<div style="font-size: 50px; text-align: center">
-  Room code:
+<div id = "room_code"; style="font-size: 50px; text-align: center">
 </div>
 
     <canvas id="board" width="800" height="800" style="display: block; margin: 0 auto;"/>
@@ -81,6 +80,10 @@
 
 </body>
 <script>
-  let ui = new UI()
+  let code = document.cookie;
+  document.getElementById("room_code").innerHTML = "Room Code: " + code;
+
+  let ui = new UI();
+  ui.client.roomId = code;
 </script>
 </html>

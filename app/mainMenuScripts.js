@@ -24,5 +24,9 @@ function twoPlayerOptions() {
 }
 
 function sendMsgToServer() {
-  console.log("hello");
+  //create socket and connect to server
+
+  let code = document.getElementById("code_input");
+  alert(code.value);
+  document.cookie = code.value;
 }
