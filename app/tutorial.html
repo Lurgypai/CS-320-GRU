@@ -1,5 +1,51 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tutorial</title>
+</head>
+
+<body>
+<h2 style="text-align: center">How To Play</h2>
+<div style="background-color: grey; overflow: auto; width: 1000px; height: 770px; margin: auto;"><br>
+  <div style="background-color: lightgrey; overflow: auto; width: 950px; height: 730px; margin: auto;">
+    <p style="text-align: center; font-size: large;"><br>This game follows most standards of American checkers where,<br></p>
+    <p style="text-align: left; font-size: large;">
+      •Pawns are only able to move diagonally and forward one square.<br><br>
+      •To capture a piece you must jump over it (diagonally), multi-jumps are allowed but they must all capture one piece per jump.<br><br>
+      •It is not enforced that a player jumps a piece and instead can opt not to, unless they are committing a multi-jump.<br><br>
+      •Captured pieces are then removed from the board and game.<br><br>
+      •Once a piece reaches the other side of the board it becomes a King.<br><br>
+      •King pieces follow the same rules however they are allowed to move to squares that are diagonally backwards and jump backwards.<br><br>
+      •To win you must capture all enemy pieces or prohibit the other player from being able to move any of their pieces.<br><br></p>
+    <p style="text-align: center; font-size: large;">To start playing,</p>
+    <p style="text-align: left; font-size: large">
+      •Choose the game option you wish to play, by choosing to either host or join a game.<br><br>
+      •If you are hosting wait until the other player joins, if you are joining then you will need to enter the username of the person hosting.<br><br>
+      •Once they connect this should transport you to the game page where the board will be displayed, Black will always move first.<br><br>
+      •After completing a game the menu at the top will allow players to reset the game to play again or cancel the game.<br><br>
+    <p style="text-align: center; font-size: large;">When you are ready to play return with the button below!</p>
+    </p>
+  </div>
+</div>
+<br>
+<div class="text-center" style="text-align: center">
+  <button onclick="goBack()" style="width: 90px; height: 45px;">Return</button>
+</div>
+</body>
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
+
+
+
+
+
+
+
+<!--
 <body onload="getWins(); getNames();">
   <style>
   h1 {text-align: center;}
@@ -123,4 +169,6 @@
   </script>
 
 </body>
+
+-->
 </html>
