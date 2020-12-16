@@ -50,9 +50,11 @@ class Server {
       let clientId = 0;
       if(this.freeClients.length !== 0) {
         clientId = this.freeClients.pop();
+        console.log("Found id to re-use" + clientId);
         this.clients[clientId - 1] = new Connection(ws, clientId);
       } else {
         clientId = this.clients.length + 1;
+        console.log("No id found, generating new id: " + clientId);
         this.clients.push(new Connection(ws, clientId));
       }
       let connectAccept = {id: 1, peerId: clientId};
