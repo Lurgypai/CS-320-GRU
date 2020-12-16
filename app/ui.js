@@ -61,6 +61,7 @@ class UI {
     this.client = new GameClient(this);
     this.selectedPieceId = 0;
     this.waiting = true;
+    this.jumping = false;
     this.teamId = 0;
 
     this.board.printBoard();
@@ -78,7 +79,9 @@ class UI {
     if(!this.waiting) {
       if (this.selectedPieceId) {
         if (!clickedPieceId) {
-          const singleMoves = this.board.getMoves(this.selectedPieceId, 1);
+          let singleMoves = [];
+          if(!this.jumping)
+            singleMoves = this.board.getMoves(this.selectedPieceId, 1);
           const jumpMoves = this.board.getMoves(this.selectedPieceId, 2);
           let isSingle = false, isJump = false;
           for (const move of singleMoves) {
@@ -88,26 +91,24 @@ class UI {
               break;
             }
           }
-          if(!isSingle) {
-            for (const move of jumpMoves) {
-              if (move[0] === col && move[1] === row) {
-                console.log("found jump move");
-                isJump = true;
-                break;
-              }
+          for (const move of jumpMoves) {
+            if (move[0] === col && move[1] === row) {
+              console.log("found jump move");
+              isJump = true;
+              this.jumping = true;
+              break;
             }
           }
           if (isSingle || isJump) {
-            if(isJump)
-              console.log("sending jump...");
-            else
-              console.log("sending single...")
             this.client.sendMove("test", this.selectedPieceId, col, row, isJump);
+            if(!this.jumping) {
+              this.selectedPieceId = 0;
+            }
             this.waiting = true;
           }
         }
       }
-      if (clickedPieceId)
+      if (clickedPieceId && !this.jumping)
         this.selectedPieceId = clickedPieceId;
     }
   }
@@ -172,11 +173,17 @@ class UI {
         img.onload = function () {
           canvasContext.drawImage(img, element.left, element.top);
         }
-        if(board.pieces.get(pieceId).team === 1) {
-          img.src = 'black_piece.png';
-        } else {
-          img.src = 'red_piece.png';
-        }
+        const piece = board.pieces.get(pieceId);
+        if(piece.team === 1) {
+            img.src = 'black_piece.png';
+            if(piece.king)
+              img.src = 'blackking_piece.png';
+          }
+          else {
+            img.src = 'red_piece.png';
+            if(piece.king)
+              img.src = 'redking_piece.png';
+          }
       }
     });
   }
@@ -220,5 +227,35 @@ class UI {
     this.board.movePiece(pieceId, col, row);
     //update gfx
     this.drawPiece(col, row, piece.team, piece.king);
+
+    if(this.jumping) {
+      if(!this.board.getMoves(this.selectedPieceId, 2).length) {
+        this.jumping = false;
+        this.selectedPieceId = 0;
+      }
+    }
+
+    //this is really important do not delete
+    let toerhTeam = 1;
+    if(this.teamId === 1)
+      toerhTeam = 2;
+
+    let team1Pieces = this.board.getValidPieces(1).length;
+    let team2Pieces = this.board.getValidPieces(2).length;
+
+    console.log("team 1 has " + team1Pieces + " team 2 has " + team2Pieces);
+
+    if(!team2Pieces) {
+      if(this.teamId === 1)
+        alert("you won")
+      else
+        alert("you are a failure")
+    } else if (!team1Pieces) {
+      if(this.teamId === 2)
+        alert("you won")
+      else
+        alert("you are a big failure")
+    }
+
   }
 }
