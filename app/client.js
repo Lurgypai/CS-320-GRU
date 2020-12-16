@@ -38,7 +38,7 @@ class GameClient {
         for(const obj of pieces) {
           const piece = new Piece();
           Object.assign(piece, obj);
-          //console.log("loading piece: " + JSON.stringify(piece));
+          console.log("loading piece: " + JSON.stringify(piece));
           this.ui.board.pieces.set(piece.id, piece)
         }
         this.ui.prepareBoard();
@@ -51,9 +51,9 @@ class GameClient {
     }
   }
 
-  sendMove(roomId, pieceId, x, y) {
+  sendMove(roomId, pieceId, x, y, isJump) {
     console.log("moving piece: " + pieceId + " to " + x +", "+ y);
-    let move = {peerId: this.peerId, roomId: this.roomId, id: 2, pieceId: pieceId, x: x, y: y};
+    let move = {peerId: this.peerId, roomId: this.roomId, id: 2, pieceId: pieceId, x: x, y: y, jump: isJump};
     this.connection.send(JSON.stringify(move));
   }
 

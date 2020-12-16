@@ -136,7 +136,6 @@ class Board
     }
   }
 
-  //TODO: rename to getSingleMoves, fix getJumpMoves
   getMoves(pieceId, distance) {
     let validMoves = [];
     if(this.pieces.has(pieceId)) {
@@ -160,7 +159,11 @@ class Board
         offsets.push([1, 1]);
       }
 
-      offsets.forEach(value => {value.forEach( coord => {coord *= distance})});
+      for(let i = 0; i !== offsets.length; ++i)
+        for(let j = 0; j !== offsets[i].length; ++j)
+          offsets[i][j] *= distance;
+
+      console.log("distance: " + distance + ", offset " + offsets);
 
       let currPos = [piece.col, piece.row];
       for(const offset of offsets) {
@@ -171,59 +174,46 @@ class Board
           }
         }
       }
-
-      //const jumpMoves = this.getJumpMoves(direction, currPos, piece.team);
-      //validMoves = validMoves.concat(jumpMoves);
     }
     return validMoves;
   }
 
-  getJumpMoves(pieceId) {
-
+  getJumpedPiece(startPos, endPos) {
+    let pieceId = 0;
+    if(startPos[0] < endPos[0]) {
+      //moved right down
+      if(startPos[1] < endPos[1]) {
+        pieceId = this.data[startPos[1] + 1][startPos[0] + 1];
+      }
+      //moved right up
+      else if(startPos[1] > endPos[1]) {
+        pieceId = this.data[startPos[1] - 1][startPos[0] + 1];
+      }
+    }
+    else if(startPos[0] > endPos[0]) {
+      //moved left down
+      if(startPos[1] < endPos[1]) {
+        pieceId = this.data[startPos[1] + 1][startPos[0] - 1];
+      }
+      //moved left up;
+      else if(startPos[1] > endPos[1]) {
+        pieceId = this.data[startPos[1] - 1][startPos[0] - 1];
+      }
+    }
+    return pieceId;
   }
 
-  getJumpMoves(direction, currPos, teamId) {
-    let targetPos = [0, 0];
-    let ret = [];
-    if(currPos[0] > 1) {
-      targetPos = [currPos[0] - 1, currPos[1] + direction];
-      if(targetPos[1] > 0 && targetPos[1] < this.height - 1) {
-        let targetId = this.data[targetPos[1]][targetPos[0]];
-        if (targetId) {
-          const targetPiece = this.pieces.get(targetId);
-          if (targetPiece.team !== teamId) {
-            let targetMove = [currPos[0] - 2, currPos[1] + (direction * 2)];
-            //if there isn't a piece there
-            if(!this.data[targetMove[1]][targetMove[0]]) {
-              ret.push(targetMove);
-              ret = ret.concat(this.getJumpMoves(direction, targetMove, teamId));
-            }
-          }
-        }
-      }
+  doJump(startPos, endPos) {
+    let pieceId = this.getJumpedPiece(startPos, endPos);
+    if(pieceId !== 0) {
+      console.log("Jumping piece " + pieceId);
+      const targetPiece = this.pieces.get(pieceId);
+      this.data[targetPiece.row][targetPiece.col] = 0;
+      this.pieces.delete(pieceId);
     }
-    if(currPos[0] < this.width - 2) {
-      targetPos = [currPos[0] + 1, currPos[1] + direction];
-      if(targetPos[1] > 0 && targetPos[1] < this.height - 1) {
-        let targetId = this.data[targetPos[1]][targetPos[0]];
-        if (targetId) {
-          const targetPiece = this.pieces.get(targetId);
-          if (targetPiece.team !== teamId) {
-            let targetMove = [currPos[0] + 2, currPos[1] + (direction * 2)];
-            //if there isn't a piece  there
-            if(!this.data[targetMove[1]][targetMove[0]]) {
-              ret.push(targetMove);
-              ret = ret.concat(this.getJumpMoves(direction, targetMove, teamId));
-            }
-          }
-        }
-      }
-    }
-    return ret;
   }
 
   getValidPieces(teamId) {
-
     let validPieces = [];
 
     this.pieces.forEach(currPiece => {
@@ -235,31 +225,10 @@ class Board
     return validPieces;
   }
 
-  validMove(pieceId, newX, newY)
-  {
-    if(this.pieces.has(pieceId)) {
-
-    }
-    /*
-    Needs data regarding the piece chosen & the position chosen to move will then check
-    (1)If move is in the bounds of the board
-    (2)Piece isn't too far
-    (3)Piece moves in the correct direction
-    (3)Single jumps are not more than 1piece
-    (4)MultiJumps rules are followed
-    Need to know pieces are a king or pawn to discern valid moves for respective pieces
-    */
-  }
-  checkWin()
-  {
-    /* This will use the array of active pieces (IF we have separate arrays for each player's pieces)
-    to determine a winner, we also need to see if pieces are unable to move which results in a draw or loss
-    we will need to cooperate with validity of moves here
-    */
-  }
-
   movePiece(pieceId, newX, newY) {
     const piece = this.pieces.get(pieceId);
+
+    this.doJump([piece.col, piece.row], [newX, newY]);
 
     this.data[piece.row][piece.col] = 0;
     piece.row = newY;
