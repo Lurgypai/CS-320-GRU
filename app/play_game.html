@@ -6,6 +6,8 @@
   <script src = "client.js"></script>
   <script src = "ui.js"></script>
   <script src = "test_server.js"></script>
+  <script src="mainMenuScripts.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />
   <title>SuperCheck</title>
 
   <style>
@@ -60,7 +62,7 @@
     .dropdown:hover .dropdown-content {display: block;}
   </style>
 </head>
-<body>
+<body style="text-align:center;">
 <ul>
   <li><a class="active" href="index.html">Home</a></li>
   <li class="dropdown">
@@ -72,18 +74,48 @@
   </li>
 </ul>
 
-<div id = "room_code"; style="font-size: 50px; text-align: center">
+<div id = "room_code"; style="font-size: 50px; text-align: center; margin-top: 20px"></div>
+
+<div id="menu" style="background-color: grey; overflow: auto; width: 800px;
+     height: 600px; margin: auto; margin-top: 80px">
+  <div id="player_welcome_div" style="margin-top: 100px; font-size: xx-large"></div>
+  <div id="enter_name_div" style="text-align: center; margin: auto;
+          margin-top: 120px">
+    <div class="ui input">
+      <input id="name_input" type="text" placeholder="Enter a name">
+    </div>
+    <br>
+    <br>
+    <div class="ui button" onclick="validName()">
+      Accept Name
+    </div>
+  </div>
+  <div id="main_menu_div" style="margin-top:120px; display: none">
+
+    <div id="two_player_options_div" style="display: block">
+      <div class="ui button" onclick="startGame()">
+        Join game / Host game
+      </div>
+      <br>
+      <br>
+      <div class="ui input">
+        <input id="code_input" type="text" placeholder="Enter join code">
+      </div>
+    </div>
+  </div>
 </div>
-
-    <canvas id="board" width="800" height="800" style="display: block; margin: 0 auto;"/>
-
-
+<canvas id="board" width="800" height="800" style="display: none; margin: 0 auto; margin-top: 40px"/>
 </body>
 <script>
-  let code = document.cookie;
-  document.getElementById("room_code").innerHTML = "Room Code: " + code;
-
-  let ui = new UI();
-  ui.client.roomId = code;
+  function startGame() {
+    let code = document.getElementById("code_input");
+    document.getElementById("room_code").innerHTML = "Room Code: " + code.value;
+    let ui = new UI();
+    ui.client.roomId = code.value;
+    let menu = document.getElementById("menu");
+    menu.style.display="none";
+    let board = document.getElementById("board");
+    board.style.display="block";
+  }
 </script>
 </html>
