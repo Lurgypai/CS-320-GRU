@@ -147,8 +147,18 @@ class Server {
         for(let i = 0; i !== this.clients.length; ++i) {
           const connection = this.clients[i];
           if(connection.ws.readyState === SocketLib.CLOSED) {
-            console.log("Client " + (i + 1) + " disconnected, marking as free");
-            toDeleteIds.push(i + 1);
+            let alreadyFree = false;
+            for(const freeId of this.freeClients) {
+              if(freeId === i + 1) {
+                console.log("Client " + freeId + " is already free...");
+                alreadyFree = true;
+                break;
+              }
+            }
+            if(!alreadyFree) {
+              console.log("Client " + (i + 1) + " disconnected, marking as free");
+              toDeleteIds.push(i + 1);
+            }
           }
         }
 
